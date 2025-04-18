@@ -6,7 +6,7 @@ import numpy as np
 
 os.environ["MUJOCO_GL"] = "glfw"
 
-repo_path = os.path.abspath("./Metaworld")
+repo_path = os.path.abspath("./final/Metaworld")
 sys.path.insert(0, repo_path)
 from metaworld import MT1
 from metaworld.policies.sawyer_pick_place_v2_policy import SawyerPickPlaceV2Policy as p
