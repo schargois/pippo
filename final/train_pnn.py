@@ -27,9 +27,9 @@ seed = 42
 np.random.seed(seed)
 random.seed(seed)
 
-# training_iterations = 40960
+training_iterations = 40960
 # training_iterations = 1024
-training_iterations = 20480
+# training_iterations = 20480
 verbose = 0
 
 

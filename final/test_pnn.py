@@ -71,7 +71,7 @@ def next_model(model, env):
 
 
 def test_on_env(
-    vec_environment, gym_env, model, num_episodes=100, progress=True, render=False
+    vec_environment, gym_env, model, num_episodes=5, progress=True, render=False
 ):
     total_rew = 0
     iterate = trange(num_episodes) if progress else range(num_episodes)
@@ -143,7 +143,9 @@ pick_place_env = RandomGoalWrapper(
 pick_place_vec_env = DummyVecEnv([lambda: pick_place_env])
 
 pick_place_test_env = RandomGoalWrapper(
-    mt1_pick_place.train_classes["pick-place-v2"], mt1_pick_place.train_tasks
+    mt1_pick_place.train_classes["pick-place-v2"],
+    mt1_pick_place.train_tasks,
+    render=True,
 )
 pick_place_test_vec_env = DummyVecEnv([lambda: pick_place_test_env])
 
@@ -164,7 +166,7 @@ hammer_env = RandomGoalWrapper(
 hammer_vec_env = DummyVecEnv([lambda: hammer_env])
 
 hammer_test_env = RandomGoalWrapper(
-    mt1_hammer.train_classes["hammer-v2"], mt1_hammer.train_tasks
+    mt1_hammer.train_classes["hammer-v2"], mt1_hammer.train_tasks, render=True
 )
 hammer_test_vec_env = DummyVecEnv([lambda: hammer_test_env])
 
@@ -175,20 +177,20 @@ hammer_callback = PPOCallback(
 # Choose model to use
 model = PPO.load("reach-v2")
 
-# success_pick_place_percentage, total_pick_place_reward = test_on_env(
-#     pick_place_test_vec_env, pick_place_test_env, model
-# )
-# print("Pick Place Total reward:", total_pick_place_reward)
-# print("Pick Place Success percentage:", success_pick_place_percentage)
+success_pick_place_percentage, total_pick_place_reward = test_on_env(
+    pick_place_test_vec_env, pick_place_test_env, model, render=True
+)
+print("Pick Place Total reward:", total_pick_place_reward)
+print("Pick Place Success percentage:", success_pick_place_percentage)
 
 success_reach_percentage, total_reach_reward = test_on_env(
-    reach_test_vec_env, reach_test_env_test, model, num_episodes=100, render=True
+    reach_test_vec_env, reach_test_env_test, model, render=True
 )
 print("Reach Total reward:", total_reach_reward)
 print("Reach Success percentage:", success_reach_percentage)
 
 success_hammer_percentage, total_hammer_reward = test_on_env(
-    hammer_test_vec_env, hammer_test_env, model
+    hammer_test_vec_env, hammer_test_env, model, render=True
 )
 hammer_test_vec_env.close()
 print("Hammer Total reward:", total_hammer_reward)
