@@ -15,7 +15,7 @@ import time
 import random
 import numpy as np
 
-# os.environ["MUJOCO_GL"] = "glfw"
+os.environ["MUJOCO_GL"] = "glfw"
 
 repo_path = os.path.abspath("./final/Metaworld")
 sys.path.insert(0, repo_path)
@@ -70,40 +70,44 @@ def next_model(model, env):
     return model
 
 
-def test_on_env(vec_environment, gym_env, model, num_episodes=100, progress=True):
+def test_on_env(
+    vec_environment, gym_env, model, num_episodes=100, progress=True, render=False
+):
     total_rew = 0
     iterate = trange(num_episodes) if progress else range(num_episodes)
 
-    # Collect reward in vectorized env
-    for _ in iterate:
-        obs = vec_environment.reset()
-        done = False
+    # for _ in iterate:
+    #     obs = vec_environment.reset()
+    #     done = False
 
-        while not done:
-            action, _ = model.predict(obs)
-            next_obs, reward, done, _ = vec_environment.step(action)
-            total_rew += reward
-            obs = next_obs
+    #     while not done:
+    #         action, _ = model.predict(obs)
+    #         next_obs, reward, done, _ = vec_environment.step(action)
+    #         if isinstance(reward, np.ndarray):
+    #             reward = reward.item()
+    #         total_rew += reward
+    #         obs = next_obs
 
     total_success = 0
     iterate = trange(num_episodes) if progress else range(num_episodes)
 
-    # Collect successes from gym_env
     for _ in iterate:
         obs, _ = gym_env.reset()
         done = False
         truncated = False
 
         while not (done or truncated):
+            if render:
+                gym_env.render()
+
             action, _ = model.predict(obs)
-            next_obs, reward, done, truncated, info = gym_env.step(action)
-            obs = next_obs
+            obs, reward, done, truncated, info = gym_env.step(action)
 
             if info.get("success", 0):
                 total_success += 1
                 break
 
-    return (total_success / num_episodes), (total_rew / num_episodes).item()
+    return (total_success / num_episodes), (total_rew / num_episodes)
 
 
 ########################################
@@ -117,9 +121,8 @@ reach_env = RandomGoalWrapper(
 )
 reach_vec_env = DummyVecEnv([lambda: reach_env])
 
-# TODO: implement actual test_task, or hold-out
 reach_test_env_test = RandomGoalWrapper(
-    mt1_reach.train_classes["reach-v2"], mt1_reach.train_tasks
+    mt1_reach.train_classes["reach-v2"], mt1_reach.train_tasks, render=True
 )
 reach_test_vec_env = DummyVecEnv([lambda: reach_test_env_test])
 
@@ -127,19 +130,6 @@ reach_test_vec_env = DummyVecEnv([lambda: reach_test_env_test])
 reach_callback = PPOCallback(
     verbose=1, save_path="reach-v2", eval_env=reach_test_vec_env
 )
-
-model = PPO(CustomActorCriticPolicy, reach_vec_env, verbose=verbose)
-model.learn(training_iterations, callback=reach_callback)
-reach_vec_env.close()
-
-# load the best model from reach-v2
-model = PPO.load("reach-v2")
-success_percentage, total_reward = test_on_env(
-    reach_test_vec_env, reach_test_env_test, model
-)
-reach_test_vec_env.close()
-print("Total reward:", total_reward)
-print("Success percentage:", success_percentage)
 
 ############################################
 ############### Second Tier ################
@@ -160,26 +150,6 @@ pick_place_test_vec_env = DummyVecEnv([lambda: pick_place_test_env])
 pick_place_callback = PPOCallback(
     verbose=1, save_path="pick-place-v2", eval_env=pick_place_test_vec_env
 )
-
-model = next_model(model, pick_place_vec_env)
-model.learn(training_iterations, callback=pick_place_callback)
-pick_place_vec_env.close()
-
-model = PPO.load("pick-place-v2")
-success_pick_place_percentage, total_pick_place_reward = test_on_env(
-    pick_place_test_vec_env, pick_place_test_env, model
-)
-pick_place_test_vec_env.close()
-
-print("Pick Place Total reward:", total_pick_place_reward)
-print("Pick Place Success percentage:", success_pick_place_percentage)
-
-success_reach_percentage, total_reach_reward = test_on_env(
-    reach_test_vec_env, reach_test_env_test, model
-)
-reach_test_vec_env.close()
-print("Reach Total reward:", total_reach_reward)
-print("Reach Success percentage:", success_reach_percentage)
 
 
 ############################################
@@ -202,20 +172,17 @@ hammer_callback = PPOCallback(
     verbose=1, save_path="hammer-v2", eval_env=hammer_test_vec_env
 )
 
-model = next_model(model, hammer_vec_env)
-model.learn(training_iterations, callback=hammer_callback)
-hammer_vec_env.close()
+# Choose model to use
+model = PPO.load("reach-v2")
 
-model = PPO.load("hammer-v2")
-
-success_pick_place_percentage, total_pick_place_reward = test_on_env(
-    pick_place_test_vec_env, pick_place_test_env, model
-)
-print("Pick Place Total reward:", total_pick_place_reward)
-print("Pick Place Success percentage:", success_pick_place_percentage)
+# success_pick_place_percentage, total_pick_place_reward = test_on_env(
+#     pick_place_test_vec_env, pick_place_test_env, model
+# )
+# print("Pick Place Total reward:", total_pick_place_reward)
+# print("Pick Place Success percentage:", success_pick_place_percentage)
 
 success_reach_percentage, total_reach_reward = test_on_env(
-    reach_test_vec_env, reach_test_env_test, model
+    reach_test_vec_env, reach_test_env_test, model, num_episodes=100, render=True
 )
 print("Reach Total reward:", total_reach_reward)
 print("Reach Success percentage:", success_reach_percentage)
