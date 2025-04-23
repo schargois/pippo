@@ -28,8 +28,7 @@ np.random.seed(seed)
 random.seed(seed)
 
 # training_iterations = 40960
-training_iterations = 20
-# training_iterations = 1024
+training_iterations = 1024
 # training_iterations = 20480
 verbose = 0
 
@@ -107,149 +106,83 @@ def test_on_env(vec_environment, gym_env, model, num_episodes=100, progress=True
     return (total_success / num_episodes), (total_rew / num_episodes).item()
 
 
+############################
+###### BEGIN TRAINING ######
+############################
+def make_envs(env_class, train_tasks, test_tasks):
+    train_env = RandomGoalWrapper(env_class, train_tasks)
+    test_env = RandomGoalWrapper(env_class, test_tasks)
+
+    train_vec_env = DummyVecEnv([lambda: train_env])
+    test_vec_env = DummyVecEnv([lambda: test_env])
+
+    train_vec_env = VecNormalize(train_vec_env, norm_obs=True, norm_reward=True)
+    test_vec_env = VecNormalize(test_vec_env, norm_obs=True, norm_reward=True)
+    test_vec_env.training = False
+    test_vec_env.norm_reward = False
+
+    return train_vec_env, test_vec_env, train_env, test_env
+
+
+def train_tier(save_path, model, vec_env, test_vec_env):
+    callback = PPOCallback(verbose=1, save_path=save_path, eval_env=test_vec_env)
+    if model is None:
+        model = PPO(CustomActorCriticPolicy, vec_env, verbose=verbose)
+    else:
+        model = next_model(model, vec_env)
+    model.learn(training_iterations, callback=callback)
+    vec_env.close()
+    return model
+
+
+def evaluate_model(model_path, env_vec, env_raw, label):
+    model = PPO.load(model_path, env=env_vec)
+    success, reward = test_on_env(env_vec, env_raw, model)
+    print(f"{label} Total reward:", reward)
+    print(f"{label} Success percentage:", success)
+
+
 ########################################
 ######### First Tier Training ##########
 ########################################
-
-mt1_reach = MT1("reach-v2", seed=seed)
-
-all_tasks_reach = mt1_reach.train_tasks
-train_tasks_reach = all_tasks_reach[:-10]
-heldout_tasks_reach = all_tasks_reach[-10:]
-
-reach_env = RandomGoalWrapper(mt1_reach.train_classes["reach-v2"], train_tasks_reach)
-reach_vec_env = DummyVecEnv([lambda: reach_env])
-reach_vec_env = VecNormalize(reach_vec_env, norm_obs=True, norm_reward=True)
-
-reach_test_env_test = RandomGoalWrapper(
-    mt1_reach.train_classes["reach-v2"], heldout_tasks_reach
-)
-reach_test_vec_env = DummyVecEnv([lambda: reach_test_env_test])
-reach_test_vec_env = VecNormalize(reach_test_vec_env, norm_obs=True, norm_reward=True)
-reach_test_vec_env.training = False
-reach_test_vec_env.norm_reward = False
-
-reach_callback = PPOCallback(
-    verbose=1, save_path="reach-v2", eval_env=reach_test_vec_env
+mt1 = MT1("reach-v2", seed=seed)
+all_tasks = mt1.train_tasks
+train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
+reach_vec_env, reach_test_vec_env, reach_env, reach_test_env = make_envs(
+    mt1.train_classes["reach-v2"], train_tasks, test_tasks
 )
 
-model = PPO(CustomActorCriticPolicy, reach_vec_env, verbose=verbose)
-model.learn(training_iterations, callback=reach_callback)
-reach_vec_env.close()
-
-# load the best model from reach-v2
-model = PPO.load("reach-v2", env=reach_test_vec_env)
-success_percentage, total_reward = test_on_env(
-    reach_test_vec_env, reach_test_env_test, model
-)
-reach_test_vec_env.close()
-print("Total reward:", total_reward)
-print("Success percentage:", success_percentage)
+model = train_tier("reach-v2", None, reach_vec_env, reach_test_vec_env)
+evaluate_model("reach-v2", reach_test_vec_env, reach_test_env, "Reach")
 
 ############################################
 ############### Second Tier ################
 ############################################
-
-mt1_pick_place = MT1("pick-place-v2", seed=seed)
-
-all_tasks_pick = mt1_pick_place.train_tasks
-train_tasks_pick = all_tasks_pick[:-10]
-heldout_tasks_pick = all_tasks_pick[-10:]
-
-pick_place_env = RandomGoalWrapper(
-    mt1_pick_place.train_classes["pick-place-v2"], train_tasks_pick
-)
-pick_place_vec_env = DummyVecEnv([lambda: pick_place_env])
-pick_place_vec_env = VecNormalize(pick_place_vec_env, norm_obs=True, norm_reward=True)
-
-pick_place_test_env = RandomGoalWrapper(
-    mt1_pick_place.train_classes["pick-place-v2"], heldout_tasks_pick
-)
-pick_place_test_vec_env = DummyVecEnv([lambda: pick_place_test_env])
-pick_place_test_vec_env = VecNormalize(
-    pick_place_test_vec_env, norm_obs=True, norm_reward=True
-)
-pick_place_test_vec_env.training = False
-pick_place_test_vec_env.norm_reward = False
-
-pick_place_callback = PPOCallback(
-    verbose=1, save_path="pick-place-v2", eval_env=pick_place_test_vec_env
+mt1 = MT1("pick-place-v2", seed=seed)
+all_tasks = mt1.train_tasks
+train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
+pp_train_vec_env, pp_test_vec_env, pp_train_env, pp_test_env = make_envs(
+    mt1.train_classes["pick-place-v2"], train_tasks, test_tasks
 )
 
-model = next_model(model, pick_place_vec_env)
-
-model.learn(training_iterations, callback=pick_place_callback)
-pick_place_vec_env.close()
-
-model = PPO.load("pick-place-v2", env=pick_place_test_vec_env)
-success_pick_place_percentage, total_pick_place_reward = test_on_env(
-    pick_place_test_vec_env, pick_place_test_env, model
+model = train_tier("pick-place-v2", model, pp_train_vec_env, pp_test_vec_env)
+evaluate_model("pick-place-v2", pp_test_vec_env, pp_test_env, "Pick Place")
+evaluate_model(
+    "pick-place-v2", reach_test_vec_env, reach_test_env, "Reach (After Pick Place)"
 )
-pick_place_test_vec_env.close()
-print("Pick Place Total reward:", total_pick_place_reward)
-print("Pick Place Success percentage:", success_pick_place_percentage)
-
-model = PPO.load("pick-place-v2", env=reach_test_vec_env)
-success_reach_percentage, total_reach_reward = test_on_env(
-    reach_test_vec_env, reach_test_env_test, model
-)
-reach_test_vec_env.close()
-print("Reach Total reward:", total_reach_reward)
-print("Reach Success percentage:", success_reach_percentage)
 
 
 ############################################
 ########### Third Tier Training ############
 ############################################
-
-mt1_hammer = MT1("hammer-v2", seed=seed)
-
-all_tasks_hammer = mt1_hammer.train_tasks
-train_tasks_hammer = all_tasks_hammer[:-10]
-heldout_tasks_hammer = all_tasks_hammer[-10:]
-
-hammer_env = RandomGoalWrapper(
-    mt1_hammer.train_classes["hammer-v2"], train_tasks_hammer
-)
-hammer_vec_env = DummyVecEnv([lambda: hammer_env])
-hammer_vec_env = VecNormalize(hammer_vec_env, norm_obs=True, norm_reward=True)
-
-hammer_test_env = RandomGoalWrapper(
-    mt1_hammer.train_classes["hammer-v2"], heldout_tasks_hammer
-)
-hammer_test_vec_env = DummyVecEnv([lambda: hammer_test_env])
-hammer_test_vec_env = VecNormalize(hammer_test_vec_env, norm_obs=True, norm_reward=True)
-hammer_test_vec_env.training = False
-hammer_test_vec_env.norm_reward = False
-
-hammer_callback = PPOCallback(
-    verbose=1, save_path="hammer-v2", eval_env=hammer_test_vec_env
+mt1 = MT1("hammer-v2", seed=seed)
+all_tasks = mt1.train_tasks
+train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
+hammer_train_vec_env, hammer_test_vec_env, hammer_train_env, hammer_test_env = (
+    make_envs(mt1.train_classes["hammer-v2"], train_tasks, test_tasks)
 )
 
-model = PPO.load("pick-place-v2", env=hammer_vec_env)
-model = next_model(model, hammer_vec_env)
-model.learn(training_iterations, callback=hammer_callback)
-hammer_vec_env.close()
-
-model = PPO.load("hammer-v2", env=hammer_test_vec_env)
-
-success_hammer_percentage, total_hammer_reward = test_on_env(
-    hammer_test_vec_env, hammer_test_env, model
-)
-hammer_test_vec_env.close()
-print("Hammer Total reward:", total_hammer_reward)
-print("Hammer Success percentage:", success_hammer_percentage)
-
-model = PPO.load("hammer-v2", env=pick_place_test_vec_env)
-success_pick_place_percentage, total_pick_place_reward = test_on_env(
-    pick_place_test_vec_env, pick_place_test_env, model
-)
-print("Pick Place Total reward:", total_pick_place_reward)
-print("Pick Place Success percentage:", success_pick_place_percentage)
-
-model = PPO.load("hammer-v2", env=reach_test_vec_env)
-success_reach_percentage, total_reach_reward = test_on_env(
-    reach_test_vec_env, reach_test_env_test, model
-)
-print("Reach Total reward:", total_reach_reward)
-print("Reach Success percentage:", success_reach_percentage)
+model = train_tier("hammer-v2", model, hammer_train_vec_env, hammer_test_vec_env)
+evaluate_model("hammer-v2", hammer_test_vec_env, hammer_test_env, "Hammer")
+evaluate_model("hammer-v2", pp_test_vec_env, pp_test_env, "Pick Place (After Hammer)")
+evaluate_model("hammer-v2", reach_test_vec_env, reach_test_env, "Reach (After Hammer)")
