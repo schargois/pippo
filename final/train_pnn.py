@@ -119,7 +119,7 @@ def warm_start(model, vec_env, expert_policy, num_steps=1024):
 
 def make_envs(env_class, train_tasks, test_tasks, render=False):
     train_env = RandomGoalWrapper(env_class, train_tasks, render=render)
-    test_env = RandomGoalWrapper(env_class, test_tasks)
+    test_env = RandomGoalWrapper(env_class, test_tasks, render=render)
 
     train_vec_env = DummyVecEnv([lambda: train_env])
     test_vec_env = DummyVecEnv([lambda: test_env])
