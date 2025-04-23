@@ -175,3 +175,7 @@ cython_debug/
 
 #VSCode
 .vscode
+
+#project things
+*-v2.zip
+plots/
