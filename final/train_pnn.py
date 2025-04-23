@@ -142,47 +142,36 @@ def evaluate_model(model_path, env_vec, env_raw, label):
     print(f"{label} Success percentage:", success)
 
 
-########################################
-######### First Tier Training ##########
-########################################
-mt1 = MT1("reach-v2", seed=seed)
-all_tasks = mt1.train_tasks
-train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
-reach_vec_env, reach_test_vec_env, reach_env, reach_test_env = make_envs(
-    mt1.train_classes["reach-v2"], train_tasks, test_tasks
-)
+model = None
+all_test_envs = {}
 
-model = train_tier("reach-v2", None, reach_vec_env, reach_test_vec_env)
-evaluate_model("reach-v2", reach_test_vec_env, reach_test_env, "Reach")
+tiers = [
+    {"name": "reach-v2", "label": "Reach"},
+    {"name": "pick-place-v2", "label": "Pick Place"},
+    {"name": "hammer-v2", "label": "Hammer"},
+]
 
-############################################
-############### Second Tier ################
-############################################
-mt1 = MT1("pick-place-v2", seed=seed)
-all_tasks = mt1.train_tasks
-train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
-pp_train_vec_env, pp_test_vec_env, pp_train_env, pp_test_env = make_envs(
-    mt1.train_classes["pick-place-v2"], train_tasks, test_tasks
-)
+for i, tier in enumerate(tiers):
+    task_name = tier["name"]
+    label = tier["label"]
 
-model = train_tier("pick-place-v2", model, pp_train_vec_env, pp_test_vec_env)
-evaluate_model("pick-place-v2", pp_test_vec_env, pp_test_env, "Pick Place")
-evaluate_model(
-    "pick-place-v2", reach_test_vec_env, reach_test_env, "Reach (After Pick Place)"
-)
+    mt1 = MT1(task_name, seed=seed)
+    all_tasks = mt1.train_tasks
+    train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
 
+    train_vec_env, test_vec_env, train_env, test_env = make_envs(
+        mt1.train_classes[task_name], train_tasks, test_tasks
+    )
 
-############################################
-########### Third Tier Training ############
-############################################
-mt1 = MT1("hammer-v2", seed=seed)
-all_tasks = mt1.train_tasks
-train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
-hammer_train_vec_env, hammer_test_vec_env, hammer_train_env, hammer_test_env = (
-    make_envs(mt1.train_classes["hammer-v2"], train_tasks, test_tasks)
-)
+    model = train_tier(task_name, model, train_vec_env, test_vec_env)
 
-model = train_tier("hammer-v2", model, hammer_train_vec_env, hammer_test_vec_env)
-evaluate_model("hammer-v2", hammer_test_vec_env, hammer_test_env, "Hammer")
-evaluate_model("hammer-v2", pp_test_vec_env, pp_test_env, "Pick Place (After Hammer)")
-evaluate_model("hammer-v2", reach_test_vec_env, reach_test_env, "Reach (After Hammer)")
+    evaluate_model(task_name, test_vec_env, test_env, label)
+
+    all_test_envs[label] = (test_vec_env, test_env)
+
+    for prev_label, (prev_vec_env, prev_raw_env) in all_test_envs.items():
+        if prev_label == label:
+            continue
+        evaluate_model(
+            task_name, prev_vec_env, prev_raw_env, f"{prev_label} (After {label})"
+        )
