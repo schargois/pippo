@@ -8,6 +8,8 @@ from stable_baselines3.common.env_util import make_vec_env
 
 from tqdm import trange
 
+import torch
+from torch.utils.data import DataLoader, TensorDataset
 
 import sys
 import os
@@ -20,7 +22,9 @@ import numpy as np
 repo_path = os.path.abspath("./final/Metaworld")
 sys.path.insert(0, repo_path)
 from metaworld import MT1
-from metaworld.policies.sawyer_pick_place_v2_policy import SawyerPickPlaceV2Policy as p
+from metaworld.policies.sawyer_reach_v2_policy import SawyerReachV2Policy
+from metaworld.policies.sawyer_pick_place_v2_policy import SawyerPickPlaceV2Policy
+from metaworld.policies.sawyer_hammer_v2_policy import SawyerHammerV2Policy
 
 # Set the random seed for reproducibility
 seed = 42
@@ -31,19 +35,6 @@ random.seed(seed)
 training_iterations = 1024
 # training_iterations = 20480
 verbose = 0
-
-
-class RandomGoalWrapper(gym.Wrapper):
-    def __init__(self, env_class, task_list, render=False):
-        self.task_list = task_list
-        self.needs_new_task = True
-        render_mode = "human" if render else None
-        super().__init__(env_class(render_mode=render_mode))
-
-    def reset(self, **kwargs):
-        task = random.choice(self.task_list)
-        self.env.set_task(task)
-        return self.env.reset(**kwargs)
 
 
 def next_model(model, env):
@@ -106,11 +97,28 @@ def test_on_env(vec_environment, gym_env, model, num_episodes=100, progress=True
     return (total_success / num_episodes), (total_rew / num_episodes).item()
 
 
-############################
-###### BEGIN TRAINING ######
-############################
-def make_envs(env_class, train_tasks, test_tasks):
-    train_env = RandomGoalWrapper(env_class, train_tasks)
+class RandomGoalWrapper(gym.Wrapper):
+    def __init__(self, env_class, task_list, render=False):
+        self.task_list = task_list
+        self.needs_new_task = True
+        render_mode = "human" if render else None
+        super().__init__(env_class(render_mode=render_mode))
+
+    def reset(self, **kwargs):
+        task = random.choice(self.task_list)
+        self.env.set_task(task)
+        return self.env.reset(**kwargs)
+
+
+def warm_start(model, vec_env, expert_policy, num_steps=1024):
+    """
+    Pre-train the policy network using behavior cloning from the expert policy.
+    """
+    pass
+
+
+def make_envs(env_class, train_tasks, test_tasks, render=False):
+    train_env = RandomGoalWrapper(env_class, train_tasks, render=render)
     test_env = RandomGoalWrapper(env_class, test_tasks)
 
     train_vec_env = DummyVecEnv([lambda: train_env])
@@ -124,12 +132,17 @@ def make_envs(env_class, train_tasks, test_tasks):
     return train_vec_env, test_vec_env, train_env, test_env
 
 
-def train_tier(save_path, model, vec_env, test_vec_env):
+def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
     callback = PPOCallback(verbose=1, save_path=save_path, eval_env=test_vec_env)
     if model is None:
         model = PPO(CustomActorCriticPolicy, vec_env, verbose=verbose)
     else:
         model = next_model(model, vec_env)
+
+    # Warm start the model with BC policy if provided
+    if bc_policy is not None:
+        warm_start(model, vec_env, bc_policy)
+
     model.learn(training_iterations, callback=callback)
     vec_env.close()
     return model
@@ -142,13 +155,19 @@ def evaluate_model(model_path, env_vec, env_raw, label):
     print(f"{label} Success percentage:", success)
 
 
+############################
+###### BEGIN TRAINING ######
+############################
 model = None
 all_test_envs = {}
-
 tiers = [
-    {"name": "reach-v2", "label": "Reach"},
-    {"name": "pick-place-v2", "label": "Pick Place"},
-    {"name": "hammer-v2", "label": "Hammer"},
+    {"name": "reach-v2", "label": "Reach", "policy": SawyerReachV2Policy()},
+    {
+        "name": "pick-place-v2",
+        "label": "Pick Place",
+        "policy": SawyerPickPlaceV2Policy(),
+    },
+    {"name": "hammer-v2", "label": "Hammer", "policy": SawyerHammerV2Policy()},
 ]
 
 for i, tier in enumerate(tiers):
@@ -160,10 +179,12 @@ for i, tier in enumerate(tiers):
     train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
 
     train_vec_env, test_vec_env, train_env, test_env = make_envs(
-        mt1.train_classes[task_name], train_tasks, test_tasks
+        mt1.train_classes[task_name], train_tasks, test_tasks, render=False
     )
 
-    model = train_tier(task_name, model, train_vec_env, test_vec_env)
+    model = train_tier(
+        task_name, model, train_vec_env, test_vec_env, tier.get("policy")
+    )
 
     evaluate_model(task_name, test_vec_env, test_env, label)
 
