@@ -73,6 +73,7 @@ def test_on_env(vec_environment, gym_env, model, num_episodes=100, progress=True
         while not done:
             action, _ = model.predict(obs)
             next_obs, reward, done, _ = vec_environment.step(action)
+            # vec_environment.render()      # Uncomment to render
             total_rew += reward
             obs = next_obs
 
@@ -110,26 +111,91 @@ class RandomGoalWrapper(gym.Wrapper):
         return self.env.reset(**kwargs)
 
 
-def warm_start(model, vec_env, expert_policy, num_steps=1024):
-    """
-    Pre-train the policy network using behavior cloning from the expert policy.
-    """
-    pass
-
-
-def make_envs(env_class, train_tasks, test_tasks, render=False):
+def make_envs(env_class, train_tasks, test_tasks, render=False, normalizer_source=None):
     train_env = RandomGoalWrapper(env_class, train_tasks, render=render)
     test_env = RandomGoalWrapper(env_class, test_tasks, render=render)
 
     train_vec_env = DummyVecEnv([lambda: train_env])
     test_vec_env = DummyVecEnv([lambda: test_env])
 
-    train_vec_env = VecNormalize(train_vec_env, norm_obs=True, norm_reward=True)
+    if normalizer_source is None:
+        train_vec_env = VecNormalize(train_vec_env, norm_obs=True, norm_reward=True)
+    else:
+        # Clone normalization stats from the previous tier
+        train_vec_env = VecNormalize(train_vec_env, norm_obs=True, norm_reward=True)
+        train_vec_env.obs_rms = normalizer_source.obs_rms
+        train_vec_env.ret_rms = normalizer_source.ret_rms
+
     test_vec_env = VecNormalize(test_vec_env, norm_obs=True, norm_reward=True)
+    test_vec_env.obs_rms = train_vec_env.obs_rms
+    test_vec_env.ret_rms = train_vec_env.ret_rms
     test_vec_env.training = False
     test_vec_env.norm_reward = False
 
     return train_vec_env, test_vec_env, train_env, test_env
+
+
+def warm_start(
+    model, vec_env, expert_policy, num_steps=10024, batch_size=128, bc_epochs=100
+):
+    """
+    Pre-train the policy network using behavior cloning from the expert policy.
+
+    Args:
+        model: PPO model with CustomActorCriticPolicy.
+        vec_env: VecEnv-wrapped Meta-World environment.
+        expert_policy: Meta-World expert policy for this task.
+        num_steps: Number of expert transitions to collect.
+        batch_size: Training batch size.
+        bc_epochs: Number of passes over the data.
+    """
+    print("Collecting expert data for behavior cloning...")
+    obs_list, act_list = [], []
+
+    env = vec_env.venv.envs[0]
+    obs, _ = env.reset()
+    collected = 0
+
+    while collected < num_steps:
+        action = expert_policy.get_action(obs)
+        obs_list.append(obs)
+        act_list.append(action)
+        # env.render()       # Enable to render
+        obs, _, done, truncated, info = env.step(action)
+        if info.get("success", 0):
+            obs, _ = env.reset()
+        collected += 1
+
+    obs_tensor = torch.tensor(np.array(obs_list), dtype=torch.float32)
+    act_tensor = torch.tensor(np.array(act_list), dtype=torch.float32)
+
+    dataset = TensorDataset(obs_tensor, act_tensor)
+    loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+
+    policy = model.policy
+    optimizer = torch.optim.Adam(policy.parameters(), lr=3e-4)
+
+    print("Training actor network via behavior cloning...")
+    policy.train()
+    for epoch in range(bc_epochs):
+        total_loss = 0
+        for batch_obs, batch_acts in loader:
+            batch_obs = batch_obs.to(policy.device)
+            batch_acts = batch_acts.to(policy.device)
+
+            pred_actions = policy.forward(batch_obs)
+            loss = torch.nn.functional.mse_loss(pred_actions[0], batch_acts)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            total_loss += loss.item()
+
+        avg_loss = total_loss / len(loader)
+        if epoch % 20 == 0:
+            print(f"Epoch {epoch + 1}/{bc_epochs} | Loss: {avg_loss:.5f}")
+
+    print("Warm start complete.")
 
 
 def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
@@ -139,9 +205,10 @@ def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
     else:
         model = next_model(model, vec_env)
 
-    # Warm start the model with BC policy if provided
     if bc_policy is not None:
         warm_start(model, vec_env, bc_policy)
+        print("Saving model after warm start...")
+        PPO.save(model, save_path)
 
     model.learn(training_iterations, callback=callback)
     vec_env.close()
@@ -159,6 +226,7 @@ def evaluate_model(model_path, env_vec, env_raw, label):
 ###### BEGIN TRAINING ######
 ############################
 model = None
+shared_normalizer = None
 all_test_envs = {}
 tiers = [
     {"name": "reach-v2", "label": "Reach", "policy": SawyerReachV2Policy()},
@@ -179,7 +247,11 @@ for i, tier in enumerate(tiers):
     train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
 
     train_vec_env, test_vec_env, train_env, test_env = make_envs(
-        mt1.train_classes[task_name], train_tasks, test_tasks, render=False
+        mt1.train_classes[task_name],
+        train_tasks,
+        test_tasks,
+        render=False,
+        normalizer_source=shared_normalizer,
     )
 
     model = train_tier(
@@ -196,3 +268,6 @@ for i, tier in enumerate(tiers):
         evaluate_model(
             task_name, prev_vec_env, prev_raw_env, f"{prev_label} (After {label})"
         )
+
+    if i == 0:
+        shared_normalizer = train_vec_env
