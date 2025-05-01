@@ -7,6 +7,7 @@ from typing import Callable, Dict, List, Optional, Tuple, Type, Union
 from stable_baselines3.common.policies import ActorCriticPolicy
 from gymnasium import spaces
 
+
 class CustomNetwork(nn.Module):
     """
     Custom network for policy and value function.
@@ -29,7 +30,6 @@ class CustomNetwork(nn.Module):
         # Save output dimensions, used to create the distributions
         self.latent_dim_pi = last_layer_dim_pi
         self.latent_dim_vf = last_layer_dim_vf
-        
 
         policy_column_generator = Column_generator_LSTM(
             input_size=feature_dim,
@@ -49,15 +49,11 @@ class CustomNetwork(nn.Module):
         )
 
         # Policy network
-        self.policy_net = ProgNet(
-            policy_column_generator
-        )
+        self.policy_net = ProgNet(policy_column_generator)
         # Value network
-        self.value_net = ProgNet(
-            value_column_generator
-        )
+        self.value_net = ProgNet(value_column_generator)
 
-    def add_policy_column(self, device: torch.device, column = None, last=False) -> None:
+    def add_policy_column(self, device: torch.device, column=None, last=False) -> None:
         """
         Add a new column to the network.
         :param device: device to use for the new column
@@ -65,8 +61,8 @@ class CustomNetwork(nn.Module):
         self.policy_column = self.policy_net.addColumn(device, column)
         if not last:
             self.policy_net.freezeColumn(self.policy_column)
-    
-    def add_value_column(self, device: torch.device, column = None, last=False) -> None:
+
+    def add_value_column(self, device: torch.device, column=None, last=False) -> None:
         """
         Add a new column to the network.
         :param device: device to use for the new column
@@ -87,7 +83,8 @@ class CustomNetwork(nn.Module):
 
     def forward_critic(self, features: torch.Tensor) -> torch.Tensor:
         return self.value_net(self.value_column, features)
-    
+
+
 class CustomActorCriticPolicy(ActorCriticPolicy):
     def __init__(
         self,
@@ -111,8 +108,6 @@ class CustomActorCriticPolicy(ActorCriticPolicy):
             *args,
             **kwargs,
         )
-        
-
 
     def _build_mlp_extractor(self) -> None:
         model = CustomNetwork(self.features_dim)

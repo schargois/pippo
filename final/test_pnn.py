@@ -175,7 +175,7 @@ hammer_callback = PPOCallback(
 )
 
 # Choose model to use
-model = PPO.load("reach-v2")
+model = PPO.load("warm-reach-v2")
 
 success_pick_place_percentage, total_pick_place_reward = test_on_env(
     pick_place_test_vec_env, pick_place_test_env, model, render=True
