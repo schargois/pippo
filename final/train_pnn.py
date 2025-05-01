@@ -33,8 +33,6 @@ seed = 42
 np.random.seed(seed)
 random.seed(seed)
 
-# training_iterations = 40960
-# training_iterations = 1024
 training_iterations = 20480
 verbose = 0
 
@@ -148,9 +146,8 @@ def warm_start(
 
     env = vec_env.venv.envs[0]
     obs, _ = env.reset()
-    collected = 0
 
-    while collected < num_steps:
+    for _ in trange(num_steps):
         action = expert_policy.get_action(obs)
 
         obs_list.append(obs)
@@ -161,8 +158,9 @@ def warm_start(
 
         if info.get("success", 0):
             obs, _ = env.reset()
-
-        collected += 1
+    vec_env.obs_rms.mean = np.mean(obs_list, axis=0)
+    vec_env.obs_rms.var = np.var(obs_list, axis=0)
+    vec_env.obs_rms.count = len(obs_list)
 
     obs_tensor = torch.tensor(np.array(obs_list), dtype=torch.float32)
     act_tensor = torch.tensor(np.array(act_list), dtype=torch.float32)
@@ -196,10 +194,7 @@ def warm_start(
 
             actions_pred, value_pred, _ = policy.forward(batch_obs)
 
-            # Actor loss (behavior cloning)
             actor_loss = F.mse_loss(actions_pred, batch_acts)
-
-            # Critic loss (fit value function to returns)
             critic_loss = F.mse_loss(value_pred, batch_rets)
 
             loss = actor_loss + critic_loss
