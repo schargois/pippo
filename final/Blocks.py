@@ -78,7 +78,7 @@ class ProgLSTMBlock(ProgBlock):
                     for _ in range(numLaterals)
                 ]
             )
-            self.dropOut_laterals = nn.Dropout(0.2)
+            self.dropOut_laterals = nn.Dropout(0.)
             # we set a dropout =0.2 to avoid  overfitting.
         self.activation = (
             lambda x: x
@@ -93,7 +93,7 @@ class ProgLSTMBlock(ProgBlock):
         if self.lateralsType == "linear":
             return lat(x)
         else:
-            out, (h, c) = lat(x)
+            out = lat(x)
             return self.dropOut_laterals(out)
 
     def runActivation(self, x):

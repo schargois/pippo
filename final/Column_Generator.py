@@ -77,7 +77,7 @@ class Column_generator_LSTM(ProgColumnGenerator):
                     outSize=self.num_of_classes,
                     activation=activation,
                     numLaterals=0,
-                    drop_out=self.ropout,
+                    drop_out=self.dropout,
                 )
             )
         elif (
@@ -123,4 +123,5 @@ class Column_generator_LSTM(ProgColumnGenerator):
                     nn.Linear(new_column.blocks[i].inSize, new_column.blocks[i].outSize)
                 )
         new_column.freeze(unfreeze=True)
+        new_column.parentCols = parent_cols
         return new_column

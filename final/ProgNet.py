@@ -94,12 +94,20 @@ class ProgNet(nn.Module):
         self.colShape = None
 
     def addColumn(self, device, col = None, msg = None):
+        # print(f"number of columns {len(self.columns)}")
         if not col:
             parents = [colRef for colRef in self.columns]
-            col = self.colGen.generateColumn(device = device,parent_cols = parents)
+            # print(f"number of parent columns {len(parents)}")
+            col = self.colGen.generateColumn(device = device, parent_cols = parents)
+            # print(f"number of parent columns for {col.colID} {len(col.parentCols)}")
+            # print(f"number of laterals for {col.colID} {len(col.blocks[1].laterals)}")
         else:
+            # print(f"number of parent columns for {col.colID} {len(col.parentCols)}")
+            # print(f"number of laterals for {col.colID} {len(col.blocks[1].laterals)}")
+            # col.parentCols = [colRef for colRef in self.columns]
             self.colGen.ids = col.colID + 1
         self.columns.append(col)
+        # print(f"number of columns after append {len(self.columns)}")
         self.colMap[col.colID] = self.numCols
         self.numRows = col.numRows
         self.numCols += 1

@@ -33,8 +33,14 @@ seed = 42
 np.random.seed(seed)
 random.seed(seed)
 
-training_iterations = 20480
+# training_iterations = 40960
+# training_iterations = 1024
+training_iterations = 10240
+# training_iterations = 20480
 verbose = 0
+hyperparams = {
+    # "learning_rate": 1e-4,
+}
 
 
 def next_model(model, env):
@@ -56,7 +62,9 @@ def next_model(model, env):
         policy_kwargs={
             "policy_columns": policy_columns_lst,
             "value_columns": value_columns_lst,
+            "new_column": True,
         },
+        **hyperparams
     )
     return model
 
@@ -135,7 +143,7 @@ def make_envs(env_class, train_tasks, test_tasks, render=False, normalizer_sourc
 
 
 def warm_start(
-    model, vec_env, expert_policy, num_steps=10024, batch_size=128, bc_epochs=100
+    model, vec_env, expert_policy, num_steps=10024, batch_size=128, bc_epochs=200
 ):
     """
     Pre-train both the policy and value networks using behavior cloning from the expert policy.
@@ -219,7 +227,7 @@ def warm_start(
 def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
     callback = PPOCallback(verbose=1, save_path=save_path, eval_env=test_vec_env)
     if model is None:
-        model = PPO(CustomActorCriticPolicy, vec_env, verbose=verbose)
+        model = PPO(CustomActorCriticPolicy, vec_env, verbose=verbose, **hyperparams)
     else:
         model = next_model(model, vec_env)
 
@@ -233,6 +241,7 @@ def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
             test_vec_env.venv.envs[0],
             f"Warm Start {save_path}",
         )
+    print("Training model...")
     model.learn(training_iterations, callback=callback)
     vec_env.close()
     return model
@@ -281,9 +290,11 @@ for i, tier in enumerate(tiers):
         task_name, model, train_vec_env, test_vec_env, tier.get("policy")
     )
 
+    print(f"Evaluating model on {task_name}...")
     evaluate_model(task_name, test_vec_env, test_env, label)
 
     all_test_envs[label] = (test_vec_env, test_env)
+
 
     for prev_label, (prev_vec_env, prev_raw_env) in all_test_envs.items():
         if prev_label == label:

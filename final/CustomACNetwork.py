@@ -37,7 +37,7 @@ class CustomNetwork(nn.Module):
             num_of_classes=last_layer_dim_pi,
             num_LSTM_layer=2,
             num_dens_Layer=0,
-            dropout=0.2,
+            dropout=0.,
         )
         value_column_generator = Column_generator_LSTM(
             input_size=feature_dim,
@@ -45,7 +45,7 @@ class CustomNetwork(nn.Module):
             num_of_classes=last_layer_dim_vf,
             num_LSTM_layer=2,
             num_dens_Layer=0,
-            dropout=0.2,
+            dropout=0.,
         )
 
         # Policy network
@@ -93,12 +93,14 @@ class CustomActorCriticPolicy(ActorCriticPolicy):
         lr_schedule: Callable[[float], float],
         policy_columns: Optional[List[ProgColumn]] = None,
         value_columns: Optional[List[ProgColumn]] = None,
+        new_column: bool = True,
         *args,
         **kwargs,
     ):
         # Disable orthogonal initialization
         self.policy_columns = policy_columns
         self.value_columns = value_columns
+        self.new_column = new_column
         kwargs["ortho_init"] = False
         super().__init__(
             observation_space,
@@ -114,9 +116,11 @@ class CustomActorCriticPolicy(ActorCriticPolicy):
         if self.policy_columns is not None:
             for column in self.policy_columns:
                 model.add_policy_column(self.device, column)
-        model.add_policy_column(self.device, last=True)
+        if self.new_column:
+            model.add_policy_column(self.device, last=True)
         if self.value_columns is not None:
             for column in self.value_columns:
                 model.add_value_column(self.device, column)
-        model.add_value_column(self.device, last=True)
+        if self.new_column:
+            model.add_value_column(self.device, last=True)
         self.mlp_extractor = model
