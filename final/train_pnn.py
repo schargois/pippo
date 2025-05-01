@@ -34,8 +34,8 @@ np.random.seed(seed)
 random.seed(seed)
 
 # training_iterations = 40960
-training_iterations = 1024
-# training_iterations = 20480
+# training_iterations = 1024
+training_iterations = 20480
 verbose = 0
 
 
@@ -63,7 +63,7 @@ def next_model(model, env):
     return model
 
 
-def test_on_env(vec_environment, gym_env, model, num_episodes=100, progress=True):
+def test_on_env(vec_environment, gym_env, model, num_episodes=20, progress=True):
     total_rew = 0
     iterate = trange(num_episodes) if progress else range(num_episodes)
 
@@ -174,6 +174,8 @@ def warm_start(
         discounted_sum = r + gamma * discounted_sum
         returns.insert(0, discounted_sum)
     returns_tensor = torch.tensor(returns, dtype=torch.float32).unsqueeze(1)
+    mean, std = returns_tensor.mean(), returns_tensor.std()
+    returns_tensor = (returns_tensor - mean) / (std + 1e-8)
 
     dataset = TensorDataset(obs_tensor, act_tensor, returns_tensor)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
@@ -229,8 +231,13 @@ def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
     if bc_policy is not None:
         warm_start(model, vec_env, bc_policy)
         print("Saving model after warm start...")
-        PPO.save(model, save_path)
-
+        PPO.save(model, "warm-" + save_path)
+        evaluate_model(
+            "warm-" + save_path,
+            test_vec_env,
+            test_vec_env.venv.envs[0],
+            f"Warm Start {save_path}",
+        )
     model.learn(training_iterations, callback=callback)
     vec_env.close()
     return model
