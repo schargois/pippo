@@ -37,7 +37,7 @@ class CustomNetwork(nn.Module):
             num_of_classes=last_layer_dim_pi,
             num_LSTM_layer=2,
             num_dens_Layer=0,
-            dropout=0.,
+            dropout=0.0,
         )
         value_column_generator = Column_generator_LSTM(
             input_size=feature_dim,
@@ -45,7 +45,7 @@ class CustomNetwork(nn.Module):
             num_of_classes=last_layer_dim_vf,
             num_LSTM_layer=2,
             num_dens_Layer=0,
-            dropout=0.,
+            dropout=0.0,
         )
 
         # Policy network

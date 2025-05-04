@@ -64,12 +64,12 @@ def next_model(model, env):
             "value_columns": value_columns_lst,
             "new_column": True,
         },
-        **hyperparams
+        **hyperparams,
     )
     return model
 
 
-def test_on_env(vec_environment, gym_env, model, num_episodes=20, progress=True):
+def test_on_env(vec_environment, gym_env, model, num_episodes=100, progress=True):
     total_rew = 0
     iterate = trange(num_episodes) if progress else range(num_episodes)
 
@@ -294,7 +294,6 @@ for i, tier in enumerate(tiers):
     evaluate_model(task_name, test_vec_env, test_env, label)
 
     all_test_envs[label] = (test_vec_env, test_env)
-
 
     for prev_label, (prev_vec_env, prev_raw_env) in all_test_envs.items():
         if prev_label == label:

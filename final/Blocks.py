@@ -78,7 +78,7 @@ class ProgLSTMBlock(ProgBlock):
                     for _ in range(numLaterals)
                 ]
             )
-            self.dropOut_laterals = nn.Dropout(0.)
+            self.dropOut_laterals = nn.Dropout(0.0)
             # we set a dropout =0.2 to avoid  overfitting.
         self.activation = (
             lambda x: x
