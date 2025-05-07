@@ -8,14 +8,15 @@ import datetime
 import os
 
 from tqdm import tqdm
+import logging
 
 
 class PPOCallback(BaseCallback):
-    def __init__(self, verbose=0, save_path="default", eval_env=None):
+    def __init__(self, verbose=0, save_path="default", eval_env=None, logger=None):
         super(PPOCallback, self).__init__(verbose)
         self.rewards = []
 
-        self.save_freq = 4096
+        self.save_freq = 2048
         self.min_reward = -np.inf
         self.actor = None
         self.eval_env = eval_env
@@ -24,6 +25,8 @@ class PPOCallback(BaseCallback):
         self.eval_steps = []
         self.eval_rewards = []
         self.successes= []
+
+        self.training_logger = logger
 
     def _init_callback(self) -> None:
         pass
@@ -72,6 +75,8 @@ class PPOCallback(BaseCallback):
             )
             print(f"evaluating {self.num_timesteps=}, {mean_reward=}=======")
             print(f"evaluating {self.num_timesteps=}, {success=}=======")
+            self.training_logger.info(f"evaluating {self.num_timesteps=}, {mean_reward=}=======")
+            self.training_logger.info(f"evaluating {self.num_timesteps=}, {success=}=======")
 
             self.eval_steps.append(self.num_timesteps)
             self.eval_rewards.append(mean_reward)
@@ -80,7 +85,9 @@ class PPOCallback(BaseCallback):
                 self.min_reward = mean_reward
                 self.model.save(self.save_path)
                 print(f"model saved on eval reward: {self.min_reward}")
+                self.training_logger.info(f"model saved on eval reward: {self.min_reward}")
             print("-" * 20)
+            self.training_logger.info("-" * 20)
 
 
         return True
@@ -90,7 +97,7 @@ class PPOCallback(BaseCallback):
         This event is triggered before exiting the `learn()` method.
         """
         print(f"model saved on eval reward: {self.min_reward}")
-
+        self.training_logger.info(f"model saved on eval reward: {self.min_reward}")
         plt.plot(self.eval_steps, self.eval_rewards, c="red")
         plt.xlabel("Episodes")
         plt.ylabel("Rewards")

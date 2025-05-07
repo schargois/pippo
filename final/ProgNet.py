@@ -140,13 +140,14 @@ class ProgNet(nn.Module):
     def forward(self, id, x):
         colToOutput = self.colMap[id]
 
-        # if colToOutput < self.numCols-1:
-        #     y = self.columns[colToOutput](x)
-        #     return y
+        if colToOutput < self.numCols-1:
+            y = self.columns[colToOutput](x)
+            return y
         for i, col in enumerate(self.columns):
             y = col(x)
-            if i == colToOutput:
-                return y
+            # if i == colToOutput:
+            #     return y
+            return y
 
 
 """

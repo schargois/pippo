@@ -19,6 +19,7 @@ import time
 import random
 import numpy as np
 import copy
+import logging
 
 # os.environ["MUJOCO_GL"] = "glfw"
 
@@ -34,47 +35,43 @@ from metaworld.envs import (
     ALL_V2_ENVIRONMENTS_GOAL_HIDDEN,
 )
 
+
+
+logging.basicConfig(
+    filename='run.log',
+    level=logging.INFO,
+    format='%(asctime)s %(message)s',
+    filemode='w'
+)
+
+logger = logging.getLogger()
+
 # Set the random seed for reproducibility
 seed = 42
 np.random.seed(seed)
 random.seed(seed)
 
-# training_iterations = 1
+# training_iterations = 1024
 # training_iterations = 4096
 # training_iterations = 20480
-# training_iterations = 40960
-training_iterations = 102400
+training_iterations = 40960
+# training_iterations = 102400
 eval_episodes = 100
 # training_iterations = 1024000
 verbose = 0
 reach_hyperparams = {
-    # "learning_rate": 3e-5,
-    # "num_steps": 40960,
-    # "learning_rate": 1e-3,
-    # "batch_size": 4096,
-    # "learning_rate": 3e-4,
     "n_steps": 2048,
     "learning_rate": 5e-4,
     "batch_size": 128,
     "ent_coef": 0.001,
 }
 pick_place_hyperparams = {
-    # "learning_rate": 3e-5,
-    # "num_steps": 40960,
-    # "learning_rate": 1e-3,
-    # "batch_size": 4096,
-    # "learning_rate": 3e-4,
     "n_steps": 2048,
     "learning_rate": 5e-4,
     "batch_size": 128,
     "ent_coef": 0.001,
 }
 hammer_hyperparams = {
-    # "learning_rate": 3e-5,
-    # "num_steps": 40960,
-    # "learning_rate": 1e-3,
-    # "batch_size": 4096,
-    # "learning_rate": 3e-4,
     "n_steps": 2048,
     "learning_rate": 5e-4,
     "batch_size": 128,
@@ -97,18 +94,19 @@ def next_model(model, env, label, hyperparams={}):
         column.freeze()
         value_column_dict_lst.append(column.state_dict())
 
-    mlp_policy_model = model.policy.mlp_extractor.policy_net
-    mlp_policy_column_dict_lst = []
-    mlp_value_model = model.policy.mlp_extractor.value_net
-    mlp_value_column_dict_lst = []
+    # mlp_policy_model = model.policy.mlp_extractor.policy_net
+    # mlp_policy_column_dict_lst = []
+    # mlp_value_model = model.policy.mlp_extractor.value_net
+    # mlp_value_column_dict_lst = []
 
-    for column in mlp_policy_model.columns:
-        column.freeze()
-        mlp_policy_column_dict_lst.append(column.state_dict())
-    for column in mlp_value_model.columns:
-        column.freeze()
-        mlp_value_column_dict_lst.append(column.state_dict())
+    # for column in mlp_policy_model.columns:
+    #     column.freeze()
+    #     mlp_policy_column_dict_lst.append(column.state_dict())
+    # for column in mlp_value_model.columns:
+    #     column.freeze()
+    #     mlp_value_column_dict_lst.append(column.state_dict())
 
+    
     model = PPO(
         CustomActorCriticPolicy,
         env,
@@ -116,8 +114,8 @@ def next_model(model, env, label, hyperparams={}):
         policy_kwargs={
             "action_net_columns": policy_column_dict_lst,
             "value_net_columns": value_column_dict_lst,
-            "mlp_policy_columns": mlp_policy_column_dict_lst,
-            "mlp_value_columns": mlp_value_column_dict_lst,
+            # "mlp_policy_columns": mlp_policy_column_dict_lst,
+            # "mlp_value_columns": mlp_value_column_dict_lst,
             "new_column": True,
         },
         **hyperparams,
@@ -216,8 +214,8 @@ def make_envs(env_class, train_tasks, test_tasks, render=False, normalizer_sourc
     else:
         # Clone normalization stats from the previous tier
         train_vec_env = VecNormalize(train_vec_env, norm_obs=True, norm_reward=True)
-        # train_vec_env.obs_rms = normalizer_source.obs_rms
-        # train_vec_env.ret_rms = normalizer_source.ret_rms
+    #     # train_vec_env.obs_rms = normalizer_source.obs_rms
+    #     # train_vec_env.ret_rms = normalizer_source.ret_rms
 
     test_vec_env = VecNormalize(test_vec_env, norm_obs=True, norm_reward=True)
     test_vec_env.obs_rms = train_vec_env.obs_rms
@@ -236,6 +234,7 @@ def warm_start(
     """
 
     print("Collecting expert data for behavior cloning...")
+    logger.info("Collecting expert data for behavior cloning...")
     obs_list, act_list, rew_list = [], [], []
 
     env = vec_env.venv.envs[0]
@@ -276,6 +275,7 @@ def warm_start(
     optimizer = torch.optim.Adam(policy.parameters(), lr=3e-4)
 
     print("Training actor and critic networks via behavior cloning...")
+    logger.info("Training actor and critic networks via behavior cloning...")
     policy.train()
     for epoch in range(bc_epochs):
         total_actor_loss = 0
@@ -306,15 +306,19 @@ def warm_start(
                 f"Actor Loss: {total_actor_loss/len(loader):.5f} | "
                 f"Critic Loss: {total_critic_loss/len(loader):.5f}"
             )
-
+            logger.info(
+                f"Epoch {epoch+1}/{bc_epochs} | "
+                f"Actor Loss: {total_actor_loss/len(loader):.5f} | "
+                f"Critic Loss: {total_critic_loss/len(loader):.5f}"
+            )
     print("Warm start complete.")
+    logger.info("Warm start complete.")
 
 
 def train_tier(
     save_path, model, vec_env, test_vec_env, bc_policy=None, pnn=True, hyperparams={}
 ):
-    callback = PPOCallback(verbose=1, save_path=save_path, eval_env=test_vec_env)
-    print(f"pnn: {pnn}")
+    callback = PPOCallback(verbose=1, save_path=save_path, eval_env=test_vec_env, logger=logger)
     if model is None:
         model = PPO(CustomActorCriticPolicy, vec_env, verbose=verbose, **hyperparams)
     elif pnn:
@@ -323,6 +327,7 @@ def train_tier(
     # if bc_policy is not None:
     #     warm_start(model, vec_env, bc_policy)
     #     print("Saving model after warm start...")
+    #     logger.info("Saving model after warm start...")
     #     PPO.save(model, "warm-" + save_path)
     #     evaluate_model(
     #         "warm-" + save_path,
@@ -331,15 +336,17 @@ def train_tier(
     #         f"Warm Start {save_path}",
     #     )
     print("Training model...")
-    print(f"policy net column map: {model.policy.mlp_extractor.policy_net.colMap}")
-    for column in model.policy.mlp_extractor.policy_net.columns:
-        print(f"Column ID: {column.colID} is frozen: {column.isFrozen}")
+    logger.info("Training model...")
     print(f"action net column map: {model.policy.action_net.colMap}")
+    logger.info(f"action net column map: {model.policy.action_net.colMap}")
     for column in model.policy.action_net.columns:
         print(f"Column ID: {column.colID} is frozen: {column.isFrozen}")
+        logger.info(f"Column ID: {column.colID} is frozen: {column.isFrozen}")
     print(f"value net column map: {model.policy.value_net.colMap}")
+    logger.info(f"value net column map: {model.policy.value_net.colMap}")
     for column in model.policy.value_net.columns:
         print(f"Column ID: {column.colID} is frozen: {column.isFrozen}")
+        logger.info(f"Column ID: {column.colID} is frozen: {column.isFrozen}")
     model.learn(training_iterations, callback=callback, progress_bar=True)
     vec_env.close()
     return model
@@ -354,6 +361,9 @@ def evaluate_model(model_path, env_vec, env_raw, label, hardcode=-1):
     print(f"{label} Total reward:", reward)
     print(f"{label} Success percentage:", success)
     print(f"{label} Vectorized success percentage:", vec_success)
+    logger.info(f"{label} Total reward: {reward}")
+    logger.info(f"{label} Success percentage: {success}")
+    logger.info(f"{label} Vectorized success percentage: {vec_success}")
 
 
 ############################
@@ -414,11 +424,7 @@ for i in reversed(range(1, 2)):
         )
 
         print(f"Evaluating model on {task_name}...")
-        # observable_cls = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[
-        #     f"{task_name}-goal-observable"
-        # ]
-        # test_env = observable_cls(seed=42)
-        # test_vec_env = DummyVecEnv([lambda: test_env])
+        logger.info(f"Evaluating model on {task_name}...")
 
         evaluate_model(task_name, test_vec_env, test_env, label)
 

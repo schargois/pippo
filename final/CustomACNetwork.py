@@ -31,15 +31,17 @@ class CustomNetwork(nn.Module):
     def __init__(
         self,
         feature_dim: int,
-        last_layer_dim_pi: int = 128,
-        last_layer_dim_vf: int = 128,
+        last_layer_dim_pi: int = 64,
+        last_layer_dim_vf: int = 64,
     ):
         super().__init__()
 
         # IMPORTANT:
         # Save output dimensions, used to create the distributions
-        self.latent_dim_pi = last_layer_dim_pi
-        self.latent_dim_vf = last_layer_dim_vf
+        # self.latent_dim_pi = last_layer_dim_pi
+        # self.latent_dim_vf = last_layer_dim_vf
+        self.latent_dim_pi = feature_dim
+        self.latent_dim_vf = feature_dim
         self.output_index_hardcode = -1
 
         print(f"feature_dim: {feature_dim}")
@@ -92,16 +94,18 @@ class CustomNetwork(nn.Module):
         return self.forward_actor(features), self.forward_critic(features)
 
     def forward_actor(self, features: torch.Tensor) -> torch.Tensor:
-        if self.output_index_hardcode != -1:
-            return self.policy_net(self.output_index_hardcode, features)
-        return self.policy_net(self.policy_column, features)
+        # if self.output_index_hardcode != -1:
+        #     return self.policy_net(self.output_index_hardcode, features)
+        # return self.policy_net(self.policy_column, features)
+        return nn.Identity()(features)
 
     def forward_critic(self, features: torch.Tensor) -> torch.Tensor:
-        if self.output_index_hardcode != -1:
-            # Hardcode the output index to the last layer of the value network
-            # print(f"hardcode the output index to {self.output_index_hardcode}")
-            return self.value_net(self.output_index_hardcode, features)
-        return self.value_net(self.value_column, features)
+        # if self.output_index_hardcode != -1:
+        #     # Hardcode the output index to the last layer of the value network
+        #     # print(f"hardcode the output index to {self.output_index_hardcode}")
+        #     return self.value_net(self.output_index_hardcode, features)
+        # return self.value_net(self.value_column, features)
+        return nn.Identity()(features)
         # if self.output_index_hardcode != -1:
         #     return self.policy_net(self.output_index_hardcode, features)
         # return self.policy_net(self.policy_column, features)
@@ -167,8 +171,8 @@ class CustomActorCriticPolicy(ActorCriticPolicy):
             input_size=feature_dim,
             hidden_size=128,
             num_of_classes=output_dim,
-            num_LSTM_layer=2,
-            num_dens_Layer=0,
+            num_LSTM_layer=0,
+            num_dens_Layer=2,
             dropout=0.0,
         )
 
@@ -191,8 +195,8 @@ class CustomActorCriticPolicy(ActorCriticPolicy):
             input_size=feature_dim,
             hidden_size=128,
             num_of_classes=1,
-            num_LSTM_layer=2,
-            num_dens_Layer=0,
+            num_LSTM_layer=0,
+            num_dens_Layer=2,
             dropout=0.0,
         )
 
@@ -204,6 +208,7 @@ class CustomActorCriticPolicy(ActorCriticPolicy):
                 column.load_state_dict(col_dict)
                 column.freeze()
         self.value_net.addColumn(self.device)
+        # self.value_net = nn.Linear(self.mlp_extractor.latent_dim_vf, 1)
 
         # Setup optimizer with initial learning rate
         self.optimizer = self.optimizer_class(self.parameters(), lr=lr_schedule(1), **self.optimizer_kwargs)
@@ -220,22 +225,23 @@ class CustomActorCriticPolicy(ActorCriticPolicy):
         return self.action_dist.proba_distribution(mean_actions, self.log_std)
     
     def _build_mlp_extractor(self) -> None:
+        # self.mlp_extractor = nn.Identity()
         self.mlp_extractor = CustomNetwork(self.features_dim)
-        if self.mlp_policy_columns is not None:
-            for col_dict in self.mlp_policy_columns:
-                id = self.mlp_extractor.add_policy_column(self.device)
-                column = self.mlp_extractor.policy_net.getColumn(id)
-                column.load_state_dict(col_dict)
-                column.freeze()
-        if self.new_column:
-            self.mlp_extractor.add_policy_column(self.device)
-        if self.mlp_value_columns is not None:
-            for col_dict in self.mlp_value_columns:
-                id = self.mlp_extractor.add_value_column(self.device)
-                column = self.mlp_extractor.value_net.getColumn(id)
-                column.load_state_dict(col_dict)
-                column.freeze()
-        if self.new_column:
-            self.mlp_extractor.add_value_column(self.device)
-        if self.output_index_hardcode != -1:
-            self.mlp_extractor.output_index_hardcode = self.output_index_hardcode
+        # if self.mlp_policy_columns is not None:
+        #     for col_dict in self.mlp_policy_columns:
+        #         id = self.mlp_extractor.add_policy_column(self.device)
+        #         column = self.mlp_extractor.policy_net.getColumn(id)
+        #         column.load_state_dict(col_dict)
+        #         column.freeze()
+        # if self.new_column:
+        #     self.mlp_extractor.add_policy_column(self.device)
+        # if self.mlp_value_columns is not None:
+        #     for col_dict in self.mlp_value_columns:
+        #         id = self.mlp_extractor.add_value_column(self.device)
+        #         column = self.mlp_extractor.value_net.getColumn(id)
+        #         column.load_state_dict(col_dict)
+        #         column.freeze()
+        # if self.new_column:
+        #     self.mlp_extractor.add_value_column(self.device)
+        # if self.output_index_hardcode != -1:
+        #     self.mlp_extractor.output_index_hardcode = self.output_index_hardcode
