@@ -392,7 +392,7 @@ for i in reversed(range(1, 2)):
         task_name = tier["name"]
         label = tier["label"]
 
-        env_class = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[task_name + "-goal-observable"]
+        env_class = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[f"{task_name}-goal-observable"]
         mt1 = MT1(task_name, seed=seed)
         train_tasks, test_tasks = mt1.train_tasks[:-10], mt1.train_tasks[-10:]
 
@@ -409,11 +409,11 @@ for i in reversed(range(1, 2)):
         )
 
         print(f"Evaluating model on {task_name}...")
-        observable_cls = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[
-            f"{task_name}-goal-observable"
-        ]
-        test_env = observable_cls(seed=42)
-        test_vec_env = DummyVecEnv([lambda: test_env])
+        # observable_cls = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[
+        #     f"{task_name}-goal-observable"
+        # ]
+        # test_env = observable_cls(seed=42)
+        # test_vec_env = DummyVecEnv([lambda: test_env])
 
         evaluate_model(task_name, test_vec_env, test_env, label)
 
