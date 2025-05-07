@@ -29,8 +29,10 @@ from metaworld.policies.sawyer_reach_v2_policy import SawyerReachV2Policy
 from metaworld.policies.sawyer_pick_place_v2_policy import SawyerPickPlaceV2Policy
 from metaworld.policies.sawyer_hammer_v2_policy import SawyerHammerV2Policy
 
-from metaworld.envs import (ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE,
-                            ALL_V2_ENVIRONMENTS_GOAL_HIDDEN)
+from metaworld.envs import (
+    ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE,
+    ALL_V2_ENVIRONMENTS_GOAL_HIDDEN,
+)
 
 # Set the random seed for reproducibility
 seed = 42
@@ -87,7 +89,7 @@ def next_model(model, env, label):
 
     policy_column_dict_lst = []
     value_column_dict_lst = []
-    
+
     for column in policy_model.columns:
         column.freeze()
         policy_column_dict_lst.append(column.state_dict())
@@ -114,7 +116,6 @@ def next_model(model, env, label):
         column.freeze()
         mlp_value_column_dict_lst.append(column.state_dict())
 
-    
     model = PPO(
         CustomActorCriticPolicy,
         env,
@@ -132,7 +133,9 @@ def next_model(model, env, label):
     return model
 
 
-def test_on_env(vec_environment, gym_env, model, num_episodes=eval_episodes, progress=True, seed=42):
+def test_on_env(
+    vec_environment, gym_env, model, num_episodes=eval_episodes, progress=True, seed=42
+):
     total_rew = 0
     iterate = trange(num_episodes) if progress else range(num_episodes)
 
@@ -186,14 +189,21 @@ def test_on_env(vec_environment, gym_env, model, num_episodes=eval_episodes, pro
                 total_vec_success += 1
                 break
 
-    return (total_success / num_episodes), (total_rew / num_episodes).item(), (total_vec_success / num_episodes)
+    return (
+        (total_success / num_episodes),
+        (total_rew / num_episodes).item(),
+        (total_vec_success / num_episodes),
+    )
 
 
 class RandomGoalWrapper(gym.Wrapper):
-    def __init__(self, env_class, task_list, render=False):
+    def __init__(self, env_class, task_list, render=False, seed=42):
         self.task_list = task_list
         render_mode = "human" if render else None
-        super().__init__(env_class(render_mode=render_mode))
+        self.env_class = env_class
+        self.seed = seed
+        env = env_class(render_mode=render_mode, seed=self.seed)
+        super().__init__(env)
 
     def reset(self, **kwargs):
         task = random.choice(self.task_list)
@@ -202,8 +212,8 @@ class RandomGoalWrapper(gym.Wrapper):
 
 
 def make_envs(env_class, train_tasks, test_tasks, render=False, normalizer_source=None):
-    train_env = RandomGoalWrapper(env_class, train_tasks, render=render)
-    test_env = RandomGoalWrapper(env_class, test_tasks, render=render)
+    train_env = RandomGoalWrapper(env_class, train_tasks, render=render, seed=seed)
+    test_env = RandomGoalWrapper(env_class, test_tasks, render=render, seed=seed)
 
     train_vec_env = DummyVecEnv([lambda: train_env])
     test_vec_env = DummyVecEnv([lambda: test_env])
@@ -323,7 +333,6 @@ def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None, pnn=True
     elif pnn:
         model = next_model(model, vec_env, save_path)
 
-
     # if bc_policy is not None:
     #     warm_start(model, vec_env, bc_policy)
     #     print("Saving model after warm start...")
@@ -383,12 +392,12 @@ for i in reversed(range(1, 2)):
         task_name = tier["name"]
         label = tier["label"]
 
+        env_class = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[task_name + "-goal-observable"]
         mt1 = MT1(task_name, seed=seed)
-        all_tasks = mt1.train_tasks
-        train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
+        train_tasks, test_tasks = mt1.train_tasks[:-10], mt1.train_tasks[-10:]
 
         train_vec_env, test_vec_env, train_env, test_env = make_envs(
-            mt1.train_classes[task_name],
+            env_class,
             train_tasks,
             test_tasks,
             render=False,
@@ -400,7 +409,9 @@ for i in reversed(range(1, 2)):
         )
 
         print(f"Evaluating model on {task_name}...")
-        observable_cls = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[f"{task_name}-goal-observable"]
+        observable_cls = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[
+            f"{task_name}-goal-observable"
+        ]
         test_env = observable_cls(seed=42)
         test_vec_env = DummyVecEnv([lambda: test_env])
 
@@ -415,14 +426,17 @@ for i in reversed(range(1, 2)):
                 task_name, prev_vec_env, prev_raw_env, f"{prev_label} (After {label})"
             )
             # # print(f"Number of Columns: {model.policy.mlp_extractor.policy_net.numCols}")
-            for index, id in enumerate(model.policy.action_net.colMap.keys()):             
+            for index, id in enumerate(model.policy.action_net.colMap.keys()):
                 # print(f"Column ID: {model.policy.mlp_extractor.policy_net.getColumn(id).colID}")
                 # print(f"Column Frozen: {model.policy.mlp_extractor.policy_net.getColumn(id).isFrozen}")
                 # print(f"Column Parents: {model.policy.mlp_extractor.policy_net.getColumn(i).parentCols}")
                 evaluate_model(
-                    task_name, prev_vec_env, prev_raw_env, f"{prev_label} (Specific Column {id}, {index})", hardcode=id
+                    task_name,
+                    prev_vec_env,
+                    prev_raw_env,
+                    f"{prev_label} (Specific Column {id}, {index})",
+                    hardcode=id,
                 )
-
 
         if i == 0:
             shared_normalizer = train_vec_env
