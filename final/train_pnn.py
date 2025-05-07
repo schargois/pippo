@@ -82,7 +82,7 @@ hammer_hyperparams = {
 }
 
 
-def next_model(model, env, label):
+def next_model(model, env, label, hyperparams={}):
 
     policy_model = model.policy.action_net
     value_model = model.policy.value_net
@@ -96,13 +96,6 @@ def next_model(model, env, label):
     for column in value_model.columns:
         column.freeze()
         value_column_dict_lst.append(column.state_dict())
-
-    if label == "pick-place-v2":
-        hyperparams = pick_place_hyperparams
-    elif label == "hammer-v2":
-        hyperparams = hammer_hyperparams
-    else:
-        hyperparams = reach_hyperparams
 
     mlp_policy_model = model.policy.mlp_extractor.policy_net
     mlp_policy_column_dict_lst = []
@@ -317,21 +310,15 @@ def warm_start(
     print("Warm start complete.")
 
 
-def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None, pnn=True):
+def train_tier(
+    save_path, model, vec_env, test_vec_env, bc_policy=None, pnn=True, hyperparams={}
+):
     callback = PPOCallback(verbose=1, save_path=save_path, eval_env=test_vec_env)
     print(f"pnn: {pnn}")
     if model is None:
-        if save_path == "reach-v2":
-            hyperparams = reach_hyperparams
-        elif save_path == "pick-place-v2":
-            hyperparams = pick_place_hyperparams
-        elif save_path == "hammer-v2":
-            hyperparams = hammer_hyperparams
-        else:
-            raise ValueError("Invalid save path")
         model = PPO(CustomActorCriticPolicy, vec_env, verbose=verbose, **hyperparams)
     elif pnn:
-        model = next_model(model, vec_env, save_path)
+        model = next_model(model, vec_env, save_path, hyperparams=hyperparams)
 
     # if bc_policy is not None:
     #     warm_start(model, vec_env, bc_policy)
@@ -376,13 +363,24 @@ model = None
 shared_normalizer = None
 all_test_envs = {}
 tiers = [
-    {"name": "reach-v2", "label": "Reach", "policy": SawyerReachV2Policy()},
+    {
+        "name": "reach-v2",
+        "label": "Reach",
+        "policy": SawyerReachV2Policy(),
+        "hyperparams": reach_hyperparams,
+    },
     {
         "name": "pick-place-v2",
         "label": "Pick Place",
         "policy": SawyerPickPlaceV2Policy(),
+        "hyperparams": pick_place_hyperparams,
     },
-    {"name": "hammer-v2", "label": "Hammer", "policy": SawyerHammerV2Policy()},
+    {
+        "name": "hammer-v2",
+        "label": "Hammer",
+        "policy": SawyerHammerV2Policy(),
+        "hyperparams": hammer_hyperparams,
+    },
 ]
 
 for i in reversed(range(1, 2)):
@@ -391,6 +389,7 @@ for i in reversed(range(1, 2)):
     for i, tier in enumerate(tiers):
         task_name = tier["name"]
         label = tier["label"]
+        hyperparams = tier["hyperparams"]
 
         env_class = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[f"{task_name}-goal-observable"]
         mt1 = MT1(task_name, seed=seed)
@@ -405,7 +404,13 @@ for i in reversed(range(1, 2)):
         )
 
         model = train_tier(
-            task_name, model, train_vec_env, test_vec_env, tier.get("policy"), pnn=pnn
+            task_name,
+            model,
+            train_vec_env,
+            test_vec_env,
+            tier.get("policy"),
+            pnn=pnn,
+            hyperparams=hyperparams,
         )
 
         print(f"Evaluating model on {task_name}...")
