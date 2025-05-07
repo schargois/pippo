@@ -7,13 +7,15 @@ from stable_baselines3.common.vec_env import VecEnv
 import datetime
 import os
 
+from tqdm import tqdm
+
 
 class PPOCallback(BaseCallback):
     def __init__(self, verbose=0, save_path="default", eval_env=None):
         super(PPOCallback, self).__init__(verbose)
         self.rewards = []
 
-        self.save_freq = 1024
+        self.save_freq = 4096
         self.min_reward = -np.inf
         self.actor = None
         self.eval_env = eval_env
@@ -21,6 +23,7 @@ class PPOCallback(BaseCallback):
         self.save_path = save_path
         self.eval_steps = []
         self.eval_rewards = []
+        self.successes= []
 
     def _init_callback(self) -> None:
         pass
@@ -62,16 +65,23 @@ class PPOCallback(BaseCallback):
 
         if self.num_timesteps % self.save_freq == 0 and self.num_timesteps != 0:
             mean_reward = evaluate_policy(
-                self.actor, environment=self.eval_env, num_episodes=20
+                self.actor, environment=self.eval_env, num_episodes=20, progress=False
+            )
+            success = vec_success_rate(
+                self.actor, environment=self.eval_env, num_episodes=20, progress=False
             )
             print(f"evaluating {self.num_timesteps=}, {mean_reward=}=======")
+            print(f"evaluating {self.num_timesteps=}, {success=}=======")
 
             self.eval_steps.append(self.num_timesteps)
             self.eval_rewards.append(mean_reward)
+            self.successes.append(success)
             if mean_reward > self.min_reward:
                 self.min_reward = mean_reward
                 self.model.save(self.save_path)
                 print(f"model saved on eval reward: {self.min_reward}")
+            print("-" * 20)
+
 
         return True
 
@@ -89,13 +99,28 @@ class PPOCallback(BaseCallback):
         directory = os.path.join("plots")
 
         os.makedirs(directory, exist_ok=True)
+        # get a hour timestamp but only the hour
+        timestamp = datetime.datetime.now().strftime("%H")
+
+        filename = f"hour_{timestamp}_plot_rew_{self.save_path}.png"
+        plt.savefig(os.path.join(directory, filename))
+        plt.close()
+
+        plt.plot(self.eval_steps, self.successes, c="blue")
+        plt.xlabel("Episodes")
+        plt.ylabel("Rewards")
+        plt.title("Rewards over Episodes")
+
+        directory = os.path.join("plots")
+
+        os.makedirs(directory, exist_ok=True)
         # timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"plot_{self.save_path}.png"
+        filename = f"hour_{timestamp}_plot_succ_{self.save_path}.png"
         plt.savefig(os.path.join(directory, filename))
         plt.close()
 
 
-def evaluate_policy(actor, environment, num_episodes=100, progress=True):
+def evaluate_policy(actor, environment, num_episodes=100, progress=True, seed=42):
     """
     Returns the mean trajectory reward of rolling out `actor` on `environment.
 
@@ -121,7 +146,7 @@ def evaluate_policy(actor, environment, num_episodes=100, progress=True):
     return (total_rew / num_episodes).item()
 
 
-def success_rate(actor, environment, num_episodes=100, progress=True):
+def success_rate(actor, environment, num_episodes=100, progress=True, seed=42):
     """
     Returns the percentage of successful trajectories of `actor` on `environment`.
 
@@ -135,6 +160,7 @@ def success_rate(actor, environment, num_episodes=100, progress=True):
     iterate = trange(num_episodes) if progress else range(num_episodes)
 
     for _ in iterate:
+        # obs, info = environment.reset(seed=seed)
         obs, info = environment.reset()
         done = False
 
@@ -144,6 +170,34 @@ def success_rate(actor, environment, num_episodes=100, progress=True):
             obs = next_obs
 
             if info.get("success", 0):
+                total_success += 1
+                break
+
+    return total_success / num_episodes
+
+def vec_success_rate(actor, environment, num_episodes=100, progress=True, seed=42):
+    """
+    Returns the percentage of successful trajectories of `actor` on `environment`.
+
+    Parameters
+    - actor: PPOActor instance, defined in Part 1.
+    - environment: Gymnasium environment.
+    - num_episodes: Total number of trajectories to collect and average over.
+    """
+
+    total_success = 0
+    iterate = trange(num_episodes) if progress else range(num_episodes)
+
+    for _ in iterate:
+        obs = environment.reset()
+        done = False
+
+        while not done:
+            action = actor.select_action(obs)
+            next_obs, reward, done, info = environment.step(action)
+            obs = next_obs
+
+            if info[0].get("success", 0):
                 total_success += 1
                 break
 
@@ -176,5 +230,5 @@ class PPOActor:
         """Gives the action prediction of this particular actor"""
 
         # TODO: Select action
-        return self.model.predict(obs)[0]
+        return self.model.predict(obs, deterministic=True)[0]
         # END TODO

@@ -18,6 +18,7 @@ import os
 import time
 import random
 import numpy as np
+import copy
 
 # os.environ["MUJOCO_GL"] = "glfw"
 
@@ -28,53 +29,117 @@ from metaworld.policies.sawyer_reach_v2_policy import SawyerReachV2Policy
 from metaworld.policies.sawyer_pick_place_v2_policy import SawyerPickPlaceV2Policy
 from metaworld.policies.sawyer_hammer_v2_policy import SawyerHammerV2Policy
 
+from metaworld.envs import (ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE,
+                            ALL_V2_ENVIRONMENTS_GOAL_HIDDEN)
+
 # Set the random seed for reproducibility
 seed = 42
 np.random.seed(seed)
 random.seed(seed)
 
-# training_iterations = 40960
-# training_iterations = 1024
-training_iterations = 10240
+# training_iterations = 1
+# training_iterations = 4096
 # training_iterations = 20480
+# training_iterations = 40960
+training_iterations = 102400
+eval_episodes = 100
+# training_iterations = 1024000
 verbose = 0
-hyperparams = {
-    # "learning_rate": 1e-4,
+reach_hyperparams = {
+    # "learning_rate": 3e-5,
+    # "num_steps": 40960,
+    # "learning_rate": 1e-3,
+    # "batch_size": 4096,
+    # "learning_rate": 3e-4,
+    "n_steps": 2048,
+    "learning_rate": 5e-4,
+    "batch_size": 128,
+    "ent_coef": 0.001,
+}
+pick_place_hyperparams = {
+    # "learning_rate": 3e-5,
+    # "num_steps": 40960,
+    # "learning_rate": 1e-3,
+    # "batch_size": 4096,
+    # "learning_rate": 3e-4,
+    "n_steps": 2048,
+    "learning_rate": 5e-4,
+    "batch_size": 128,
+    "ent_coef": 0.001,
+}
+hammer_hyperparams = {
+    # "learning_rate": 3e-5,
+    # "num_steps": 40960,
+    # "learning_rate": 1e-3,
+    # "batch_size": 4096,
+    # "learning_rate": 3e-4,
+    "n_steps": 2048,
+    "learning_rate": 5e-4,
+    "batch_size": 128,
+    "ent_coef": 0.001,
 }
 
 
-def next_model(model, env):
-    policy_model = model.policy.mlp_extractor.policy_net
-    value_model = model.policy.mlp_extractor.value_net
-    policy_columns_lst = []
-    value_columns_lst = []
-    for i in range(policy_model.numCols):
-        column = policy_model.getColumn(i)
-        policy_columns_lst.append(column)
-    for i in range(value_model.numCols):
-        column = value_model.getColumn(i)
-        value_columns_lst.append(column)
+def next_model(model, env, label):
 
+    policy_model = model.policy.action_net
+    value_model = model.policy.value_net
+
+    policy_column_dict_lst = []
+    value_column_dict_lst = []
+    
+    for column in policy_model.columns:
+        column.freeze()
+        policy_column_dict_lst.append(column.state_dict())
+    for column in value_model.columns:
+        column.freeze()
+        value_column_dict_lst.append(column.state_dict())
+
+    if label == "pick-place-v2":
+        hyperparams = pick_place_hyperparams
+    elif label == "hammer-v2":
+        hyperparams = hammer_hyperparams
+    else:
+        hyperparams = reach_hyperparams
+
+    mlp_policy_model = model.policy.mlp_extractor.policy_net
+    mlp_policy_column_dict_lst = []
+    mlp_value_model = model.policy.mlp_extractor.value_net
+    mlp_value_column_dict_lst = []
+
+    for column in mlp_policy_model.columns:
+        column.freeze()
+        mlp_policy_column_dict_lst.append(column.state_dict())
+    for column in mlp_value_model.columns:
+        column.freeze()
+        mlp_value_column_dict_lst.append(column.state_dict())
+
+    
     model = PPO(
         CustomActorCriticPolicy,
         env,
         verbose=verbose,
         policy_kwargs={
-            "policy_columns": policy_columns_lst,
-            "value_columns": value_columns_lst,
+            "action_net_columns": policy_column_dict_lst,
+            "value_net_columns": value_column_dict_lst,
+            "mlp_policy_columns": mlp_policy_column_dict_lst,
+            "mlp_value_columns": mlp_value_column_dict_lst,
             "new_column": True,
         },
         **hyperparams,
     )
+
     return model
 
 
-def test_on_env(vec_environment, gym_env, model, num_episodes=100, progress=True):
+def test_on_env(vec_environment, gym_env, model, num_episodes=eval_episodes, progress=True, seed=42):
     total_rew = 0
     iterate = trange(num_episodes) if progress else range(num_episodes)
 
     # Collect reward in vectorized env
     for _ in iterate:
+        # reset the environment with a seed
+        # vec_environment.seed(seed)
         obs = vec_environment.reset()
         done = False
 
@@ -90,6 +155,7 @@ def test_on_env(vec_environment, gym_env, model, num_episodes=100, progress=True
 
     # Collect successes from gym_env
     for _ in iterate:
+        # obs, _ = gym_env.reset(seed=seed)
         obs, _ = gym_env.reset()
         done = False
         truncated = False
@@ -103,7 +169,24 @@ def test_on_env(vec_environment, gym_env, model, num_episodes=100, progress=True
                 total_success += 1
                 break
 
-    return (total_success / num_episodes), (total_rew / num_episodes).item()
+    # Collect successes from vectorized env
+    total_vec_success = 0
+    iterate = trange(num_episodes) if progress else range(num_episodes)
+    for _ in iterate:
+        # vec_environment.seed(seed)
+        obs = vec_environment.reset()
+        done = False
+
+        while not done:
+            action, _ = model.predict(obs)
+            next_obs, reward, done, info = vec_environment.step(action)
+            obs = next_obs
+
+            if info[0].get("success", 0):
+                total_vec_success += 1
+                break
+
+    return (total_success / num_episodes), (total_rew / num_episodes).item(), (total_vec_success / num_episodes)
 
 
 class RandomGoalWrapper(gym.Wrapper):
@@ -130,8 +213,8 @@ def make_envs(env_class, train_tasks, test_tasks, render=False, normalizer_sourc
     else:
         # Clone normalization stats from the previous tier
         train_vec_env = VecNormalize(train_vec_env, norm_obs=True, norm_reward=True)
-        train_vec_env.obs_rms = normalizer_source.obs_rms
-        train_vec_env.ret_rms = normalizer_source.ret_rms
+        # train_vec_env.obs_rms = normalizer_source.obs_rms
+        # train_vec_env.ret_rms = normalizer_source.ret_rms
 
     test_vec_env = VecNormalize(test_vec_env, norm_obs=True, norm_reward=True)
     test_vec_env.obs_rms = train_vec_env.obs_rms
@@ -224,34 +307,57 @@ def warm_start(
     print("Warm start complete.")
 
 
-def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
+def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None, pnn=True):
     callback = PPOCallback(verbose=1, save_path=save_path, eval_env=test_vec_env)
+    print(f"pnn: {pnn}")
     if model is None:
+        if save_path == "reach-v2":
+            hyperparams = reach_hyperparams
+        elif save_path == "pick-place-v2":
+            hyperparams = pick_place_hyperparams
+        elif save_path == "hammer-v2":
+            hyperparams = hammer_hyperparams
+        else:
+            raise ValueError("Invalid save path")
         model = PPO(CustomActorCriticPolicy, vec_env, verbose=verbose, **hyperparams)
-    else:
-        model = next_model(model, vec_env)
+    elif pnn:
+        model = next_model(model, vec_env, save_path)
 
-    if bc_policy is not None:
-        warm_start(model, vec_env, bc_policy)
-        print("Saving model after warm start...")
-        PPO.save(model, "warm-" + save_path)
-        evaluate_model(
-            "warm-" + save_path,
-            test_vec_env,
-            test_vec_env.venv.envs[0],
-            f"Warm Start {save_path}",
-        )
+
+    # if bc_policy is not None:
+    #     warm_start(model, vec_env, bc_policy)
+    #     print("Saving model after warm start...")
+    #     PPO.save(model, "warm-" + save_path)
+    #     evaluate_model(
+    #         "warm-" + save_path,
+    #         test_vec_env,
+    #         test_vec_env.venv.envs[0],
+    #         f"Warm Start {save_path}",
+    #     )
     print("Training model...")
-    model.learn(training_iterations, callback=callback)
+    print(f"policy net column map: {model.policy.mlp_extractor.policy_net.colMap}")
+    for column in model.policy.mlp_extractor.policy_net.columns:
+        print(f"Column ID: {column.colID} is frozen: {column.isFrozen}")
+    print(f"action net column map: {model.policy.action_net.colMap}")
+    for column in model.policy.action_net.columns:
+        print(f"Column ID: {column.colID} is frozen: {column.isFrozen}")
+    print(f"value net column map: {model.policy.value_net.colMap}")
+    for column in model.policy.value_net.columns:
+        print(f"Column ID: {column.colID} is frozen: {column.isFrozen}")
+    model.learn(training_iterations, callback=callback, progress_bar=True)
     vec_env.close()
     return model
 
 
-def evaluate_model(model_path, env_vec, env_raw, label):
+def evaluate_model(model_path, env_vec, env_raw, label, hardcode=-1):
     model = PPO.load(model_path, env=env_vec)
-    success, reward = test_on_env(env_vec, env_raw, model)
+    model.policy.mlp_extractor.output_index_hardcode = hardcode
+    model.policy.action_net.output_index_hardcode = hardcode
+    model.policy.value_net.output_index_hardcode = hardcode
+    success, reward, vec_success = test_on_env(env_vec, env_raw, model)
     print(f"{label} Total reward:", reward)
     print(f"{label} Success percentage:", success)
+    print(f"{label} Vectorized success percentage:", vec_success)
 
 
 ############################
@@ -270,37 +376,53 @@ tiers = [
     {"name": "hammer-v2", "label": "Hammer", "policy": SawyerHammerV2Policy()},
 ]
 
-for i, tier in enumerate(tiers):
-    task_name = tier["name"]
-    label = tier["label"]
+for i in reversed(range(1, 2)):
+    pnn = i
+    shared_normalizer = None
+    for i, tier in enumerate(tiers):
+        task_name = tier["name"]
+        label = tier["label"]
 
-    mt1 = MT1(task_name, seed=seed)
-    all_tasks = mt1.train_tasks
-    train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
+        mt1 = MT1(task_name, seed=seed)
+        all_tasks = mt1.train_tasks
+        train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
 
-    train_vec_env, test_vec_env, train_env, test_env = make_envs(
-        mt1.train_classes[task_name],
-        train_tasks,
-        test_tasks,
-        render=False,
-        normalizer_source=shared_normalizer,
-    )
-
-    model = train_tier(
-        task_name, model, train_vec_env, test_vec_env, tier.get("policy")
-    )
-
-    print(f"Evaluating model on {task_name}...")
-    evaluate_model(task_name, test_vec_env, test_env, label)
-
-    all_test_envs[label] = (test_vec_env, test_env)
-
-    for prev_label, (prev_vec_env, prev_raw_env) in all_test_envs.items():
-        if prev_label == label:
-            continue
-        evaluate_model(
-            task_name, prev_vec_env, prev_raw_env, f"{prev_label} (After {label})"
+        train_vec_env, test_vec_env, train_env, test_env = make_envs(
+            mt1.train_classes[task_name],
+            train_tasks,
+            test_tasks,
+            render=False,
+            normalizer_source=shared_normalizer,
         )
 
-    if i == 0:
-        shared_normalizer = train_vec_env
+        model = train_tier(
+            task_name, model, train_vec_env, test_vec_env, tier.get("policy"), pnn=pnn
+        )
+
+        print(f"Evaluating model on {task_name}...")
+        observable_cls = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[f"{task_name}-goal-observable"]
+        test_env = observable_cls(seed=42)
+        test_vec_env = DummyVecEnv([lambda: test_env])
+
+        evaluate_model(task_name, test_vec_env, test_env, label)
+
+        all_test_envs[label] = (test_vec_env, test_env)
+
+        for prev_label, (prev_vec_env, prev_raw_env) in all_test_envs.items():
+            if prev_label == label:
+                continue
+            evaluate_model(
+                task_name, prev_vec_env, prev_raw_env, f"{prev_label} (After {label})"
+            )
+            # # print(f"Number of Columns: {model.policy.mlp_extractor.policy_net.numCols}")
+            for index, id in enumerate(model.policy.action_net.colMap.keys()):             
+                # print(f"Column ID: {model.policy.mlp_extractor.policy_net.getColumn(id).colID}")
+                # print(f"Column Frozen: {model.policy.mlp_extractor.policy_net.getColumn(id).isFrozen}")
+                # print(f"Column Parents: {model.policy.mlp_extractor.policy_net.getColumn(i).parentCols}")
+                evaluate_model(
+                    task_name, prev_vec_env, prev_raw_env, f"{prev_label} (Specific Column {id}, {index})", hardcode=id
+                )
+
+
+        if i == 0:
+            shared_normalizer = train_vec_env
