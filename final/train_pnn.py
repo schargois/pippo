@@ -27,6 +27,10 @@ from metaworld import MT1
 from metaworld.policies.sawyer_reach_v2_policy import SawyerReachV2Policy
 from metaworld.policies.sawyer_pick_place_v2_policy import SawyerPickPlaceV2Policy
 from metaworld.policies.sawyer_hammer_v2_policy import SawyerHammerV2Policy
+from metaworld.envs import (
+    ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE,
+    ALL_V2_ENVIRONMENTS_GOAL_HIDDEN,
+)
 
 # Set the random seed for reproducibility
 seed = 42
@@ -107,10 +111,13 @@ def test_on_env(vec_environment, gym_env, model, num_episodes=100, progress=True
 
 
 class RandomGoalWrapper(gym.Wrapper):
-    def __init__(self, env_class, task_list, render=False):
+    def __init__(self, env_class, task_list, render=False, seed=42):
         self.task_list = task_list
         render_mode = "human" if render else None
-        super().__init__(env_class(render_mode=render_mode))
+        self.env_class = env_class
+        self.seed = seed
+        env = env_class(render_mode=render_mode, seed=self.seed)
+        super().__init__(env)
 
     def reset(self, **kwargs):
         task = random.choice(self.task_list)
@@ -119,7 +126,7 @@ class RandomGoalWrapper(gym.Wrapper):
 
 
 def make_envs(env_class, train_tasks, test_tasks, render=False, normalizer_source=None):
-    train_env = RandomGoalWrapper(env_class, train_tasks, render=render)
+    train_env = RandomGoalWrapper(env_class, train_tasks, render=render, seed=seed)
     test_env = RandomGoalWrapper(env_class, test_tasks, render=render)
 
     train_vec_env = DummyVecEnv([lambda: train_env])
@@ -274,12 +281,12 @@ for i, tier in enumerate(tiers):
     task_name = tier["name"]
     label = tier["label"]
 
+    env_class = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[f"{task_name}-goal-observable"]
     mt1 = MT1(task_name, seed=seed)
-    all_tasks = mt1.train_tasks
-    train_tasks, test_tasks = all_tasks[:-10], all_tasks[-10:]
+    train_tasks, test_tasks = mt1.train_tasks[:-10], mt1.train_tasks[-10:]
 
     train_vec_env, test_vec_env, train_env, test_env = make_envs(
-        mt1.train_classes[task_name],
+        env_class,
         train_tasks,
         test_tasks,
         render=False,
