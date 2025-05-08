@@ -16,7 +16,7 @@ class PPOCallback(BaseCallback):
         super(PPOCallback, self).__init__(verbose)
         self.rewards = []
 
-        self.save_freq = 2048
+        self.save_freq = 40960
         self.min_reward = -np.inf
         self.actor = None
         self.eval_env = eval_env

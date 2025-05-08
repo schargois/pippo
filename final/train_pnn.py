@@ -37,14 +37,6 @@ from metaworld.envs import (
 
 
 
-logging.basicConfig(
-    filename='run.log',
-    level=logging.INFO,
-    format='%(asctime)s %(message)s',
-    filemode='w'
-)
-
-logger = logging.getLogger()
 
 # Set the random seed for reproducibility
 seed = 42
@@ -54,29 +46,41 @@ random.seed(seed)
 # training_iterations = 1024
 # training_iterations = 4096
 # training_iterations = 20480
-training_iterations = 40960
+# training_iterations = 40960
 # training_iterations = 102400
 eval_episodes = 100
-# training_iterations = 1024000
+training_iterations = 1024000
 verbose = 0
 reach_hyperparams = {
     "n_steps": 2048,
     "learning_rate": 5e-4,
     "batch_size": 128,
-    "ent_coef": 0.001,
 }
 pick_place_hyperparams = {
     "n_steps": 2048,
     "learning_rate": 5e-4,
     "batch_size": 128,
-    "ent_coef": 0.001,
 }
 hammer_hyperparams = {
     "n_steps": 2048,
     "learning_rate": 5e-4,
     "batch_size": 128,
-    "ent_coef": 0.001,
 }
+
+runid = "eval_episodes" + str(eval_episodes) \
+    + "_training_iterations" + str(training_iterations) \
+        + "_nsteps" + str(reach_hyperparams["n_steps"]) \
+             + "_lr" + str(reach_hyperparams["learning_rate"]) \
+                + "_batch" + str(reach_hyperparams["batch_size"])
+
+logging.basicConfig(
+    filename=f'run_{runid}.log',
+    level=logging.INFO,
+    format='%(asctime)s %(message)s',
+    filemode='w'
+)
+
+logger = logging.getLogger()
 
 
 def next_model(model, env, label, hyperparams={}):
@@ -400,6 +404,7 @@ for i in reversed(range(1, 2)):
         task_name = tier["name"]
         label = tier["label"]
         hyperparams = tier["hyperparams"]
+        logger.info(f"Using hyperparams: {hyperparams} for {task_name}")
 
         env_class = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[f"{task_name}-goal-observable"]
         mt1 = MT1(task_name, seed=seed)
