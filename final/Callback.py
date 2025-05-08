@@ -21,6 +21,7 @@ class PPOCallback(BaseCallback):
         self.save_path = save_path
         self.eval_steps = []
         self.eval_rewards = []
+        self.successes = []
         self.training_logger = logger
 
     def _init_callback(self) -> None:
@@ -65,16 +66,24 @@ class PPOCallback(BaseCallback):
             mean_reward = evaluate_policy(
                 self.actor, environment=self.eval_env, num_episodes=20
             )
+            success = success_rate(
+                self.actor, environment=self.eval_env.venv.envs[0], num_episodes=20, progress=False
+            )
             print(f"evaluating {self.num_timesteps=}, {mean_reward=}=======")
-            self.training_logger.info(f"evaluating {self.num_timesteps=}, {mean_reward=}")
+            print(f"evaluating {self.num_timesteps=}, {success=}=======")
+            self.training_logger.info(f"evaluating {self.num_timesteps=}, {mean_reward=}=======")
+            self.training_logger.info(f"evaluating {self.num_timesteps=}, {success=}=======")
 
             self.eval_steps.append(self.num_timesteps)
             self.eval_rewards.append(mean_reward)
+            self.successes.append(success)
             if mean_reward > self.min_reward:
                 self.min_reward = mean_reward
                 self.model.save(self.save_path)
                 print(f"model saved on eval reward: {self.min_reward}")
                 self.training_logger.info(f"model saved on eval reward: {self.min_reward}")
+            print("-" * 20)
+            self.training_logger.info("-" * 20)
 
         return True
 
@@ -82,6 +91,12 @@ class PPOCallback(BaseCallback):
         """
         This event is triggered before exiting the `learn()` method.
         """
+        if self.save_path is not None:
+            directory = os.path.join(f"plots/{self.save_path}")
+        else:
+            directory = os.path.join("plots")
+        os.makedirs(directory, exist_ok=True)
+
         print(f"model saved on eval reward: {self.min_reward}")
         self.training_logger.info(f"model saved on eval reward: {self.min_reward}")
 
@@ -90,11 +105,18 @@ class PPOCallback(BaseCallback):
         plt.ylabel("Rewards")
         plt.title("Rewards over Episodes")
 
-        directory = os.path.join("plots")
+        # filename = f"plot_{self.save_path}.png"
+        filename = f"plot_rewards.png"
+        plt.savefig(os.path.join(directory, filename))
+        plt.close()
 
-        os.makedirs(directory, exist_ok=True)
-        # timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"plot_{self.save_path}.png"
+        plt.plot(self.eval_steps, self.successes, c="blue")
+        plt.xlabel("Episodes")
+        plt.ylabel("Success Rate")
+        plt.title("Success Rate over Episodes")
+        
+        # filename = f"plot_{self.save_path}_success.png"
+        filename = f"plot_success.png"
         plt.savefig(os.path.join(directory, filename))
         plt.close()
 
@@ -150,6 +172,7 @@ def success_rate(actor, environment, num_episodes=100, progress=True):
             if info.get("success", 0):
                 total_success += 1
                 break
+            done = done or truncated
 
     return total_success / num_episodes
 

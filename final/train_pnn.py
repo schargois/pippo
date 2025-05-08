@@ -39,15 +39,18 @@ np.random.seed(seed)
 random.seed(seed)
 
 # training_iterations = 40960
-# training_iterations = 1024
-training_iterations = 10240
+# training_iterations = 2048
+# training_iterations = 10240
 # training_iterations = 20480
+training_iterations = 102400
+eval_episodes = 100
+bc_epochs = 400
 verbose = 0
 hyperparams = {
     "n_steps": 1024,
     "learning_rate": 5e-4,
     "batch_size": 128,
-    "ent_coef": 0.01,
+    "ent_coef": 0.001,
 }
 
 datetime_str = time.strftime("%Y-%m-%d_%H-%M-%S")
@@ -88,7 +91,7 @@ def next_model(model, env):
     return model
 
 
-def test_on_env(vec_environment, gym_env, model, num_episodes=100, progress=True):
+def test_on_env(vec_environment, gym_env, model, num_episodes=eval_episodes, progress=True):
     total_rew = 0
     iterate = trange(num_episodes) if progress else range(num_episodes)
 
@@ -170,7 +173,7 @@ def warm_start(
     expert_policy,
     num_steps=10024,
     batch_size=128,
-    bc_epochs=200,
+    bc_epochs=bc_epochs,
     task_name="task",
 ):
     """
@@ -345,6 +348,7 @@ tiers = [
 for i, tier in enumerate(tiers):
     task_name = tier["name"]
     label = tier["label"]
+    save_path = datetime_str + "-" + task_name
 
     env_class = ALL_V2_ENVIRONMENTS_GOAL_OBSERVABLE[f"{task_name}-goal-observable"]
     mt1 = MT1(task_name, seed=seed)
@@ -359,12 +363,12 @@ for i, tier in enumerate(tiers):
     )
 
     model = train_tier(
-        task_name, model, train_vec_env, test_vec_env, tier.get("policy")
+        save_path, model, train_vec_env, test_vec_env, tier.get("policy")
     )
 
     print(f"Evaluating model on {task_name}...")
     logger.info(f"Evaluating model on {task_name}...")
-    evaluate_model(task_name, test_vec_env, test_env, label)
+    evaluate_model(save_path, test_vec_env, test_env, label)
 
     all_test_envs[label] = (test_vec_env, test_env)
 
@@ -372,7 +376,7 @@ for i, tier in enumerate(tiers):
         if prev_label == label:
             continue
         evaluate_model(
-            task_name, prev_vec_env, prev_raw_env, f"{prev_label} (After {label})"
+            save_path, prev_vec_env, prev_raw_env, f"{prev_label} (After {label})"
         )
 
     if i == 0:
