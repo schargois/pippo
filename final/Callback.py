@@ -9,7 +9,7 @@ import os
 
 
 class PPOCallback(BaseCallback):
-    def __init__(self, verbose=0, save_path="default", eval_env=None):
+    def __init__(self, verbose=0, save_path="default", eval_env=None, logger=None):
         super(PPOCallback, self).__init__(verbose)
         self.rewards = []
 
@@ -21,6 +21,7 @@ class PPOCallback(BaseCallback):
         self.save_path = save_path
         self.eval_steps = []
         self.eval_rewards = []
+        self.training_logger = logger
 
     def _init_callback(self) -> None:
         pass
@@ -65,6 +66,7 @@ class PPOCallback(BaseCallback):
                 self.actor, environment=self.eval_env, num_episodes=20
             )
             print(f"evaluating {self.num_timesteps=}, {mean_reward=}=======")
+            self.training_logger.info(f"evaluating {self.num_timesteps=}, {mean_reward=}")
 
             self.eval_steps.append(self.num_timesteps)
             self.eval_rewards.append(mean_reward)
@@ -72,6 +74,7 @@ class PPOCallback(BaseCallback):
                 self.min_reward = mean_reward
                 self.model.save(self.save_path)
                 print(f"model saved on eval reward: {self.min_reward}")
+                self.training_logger.info(f"model saved on eval reward: {self.min_reward}")
 
         return True
 
@@ -80,6 +83,7 @@ class PPOCallback(BaseCallback):
         This event is triggered before exiting the `learn()` method.
         """
         print(f"model saved on eval reward: {self.min_reward}")
+        self.training_logger.info(f"model saved on eval reward: {self.min_reward}")
 
         plt.plot(self.eval_steps, self.eval_rewards, c="red")
         plt.xlabel("Episodes")

@@ -18,6 +18,7 @@ import os
 import time
 import random
 import numpy as np
+import logging
 
 # os.environ["MUJOCO_GL"] = "glfw"
 
@@ -43,8 +44,23 @@ training_iterations = 10240
 # training_iterations = 20480
 verbose = 0
 hyperparams = {
-    # "learning_rate": 1e-4,
+    "n_steps": 1024,
+    "learning_rate": 5e-4,
+    "batch_size": 128,
+    "ent_coef": 0.01,
 }
+
+datetime_str = time.strftime("%Y-%m-%d_%H-%M-%S")
+
+logging.basicConfig(
+    filename=f'run_{datetime_str}.log',
+    level=logging.INFO,
+    format='%(asctime)s %(message)s',
+    filemode='w'
+)
+
+logger = logging.getLogger()
+
 
 
 def next_model(model, env):
@@ -157,6 +173,7 @@ def warm_start(
     """
 
     print("Collecting expert data for behavior cloning...")
+    logger.info("Collecting expert data for behavior cloning...")
     obs_list, act_list, rew_list = [], [], []
 
     env = vec_env.venv.envs[0]
@@ -197,6 +214,7 @@ def warm_start(
     optimizer = torch.optim.Adam(policy.parameters(), lr=3e-4)
 
     print("Training actor and critic networks via behavior cloning...")
+    logger.info("Training actor and critic networks via behavior cloning...")
     policy.train()
     for epoch in range(bc_epochs):
         total_actor_loss = 0
@@ -227,12 +245,17 @@ def warm_start(
                 f"Actor Loss: {total_actor_loss/len(loader):.5f} | "
                 f"Critic Loss: {total_critic_loss/len(loader):.5f}"
             )
+            logger.info(
+                f"Epoch {epoch+1}/{bc_epochs} | "
+                f"Actor Loss: {total_actor_loss/len(loader):.5f} | "
+                f"Critic Loss: {total_critic_loss/len(loader):.5f}"
+            )
 
     print("Warm start complete.")
-
+    logger.info("Warm start complete.")
 
 def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
-    callback = PPOCallback(verbose=1, save_path=save_path, eval_env=test_vec_env)
+    callback = PPOCallback(verbose=1, save_path=save_path, eval_env=test_vec_env, logger=logger)
     if model is None:
         model = PPO(CustomActorCriticPolicy, vec_env, verbose=verbose, **hyperparams)
     else:
@@ -241,6 +264,7 @@ def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
     if bc_policy is not None:
         warm_start(model, vec_env, bc_policy)
         print("Saving model after warm start...")
+        logger.info("Saving model after warm start...")
         PPO.save(model, "warm-" + save_path)
         evaluate_model(
             "warm-" + save_path,
@@ -249,6 +273,7 @@ def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
             f"Warm Start {save_path}",
         )
     print("Training model...")
+    logger.info("Training model...")
     model.learn(training_iterations, callback=callback)
     vec_env.close()
     return model
@@ -259,7 +284,8 @@ def evaluate_model(model_path, env_vec, env_raw, label):
     success, reward = test_on_env(env_vec, env_raw, model)
     print(f"{label} Total reward:", reward)
     print(f"{label} Success percentage:", success)
-
+    logger.info(f"{label} Total reward: {reward}")
+    logger.info(f"{label} Success percentage: {success}")
 
 ############################
 ###### BEGIN TRAINING ######
@@ -298,6 +324,7 @@ for i, tier in enumerate(tiers):
     )
 
     print(f"Evaluating model on {task_name}...")
+    logger.info(f"Evaluating model on {task_name}...")
     evaluate_model(task_name, test_vec_env, test_env, label)
 
     all_test_envs[label] = (test_vec_env, test_env)
