@@ -91,7 +91,9 @@ def next_model(model, env):
     return model
 
 
-def test_on_env(vec_environment, gym_env, model, num_episodes=eval_episodes, progress=True):
+def test_on_env(
+    vec_environment, gym_env, model, num_episodes=eval_episodes, progress=True
+):
     total_rew = 0
     iterate = trange(num_episodes) if progress else range(num_episodes)
 
@@ -304,7 +306,7 @@ def warm_start(
     print(f"Saved plot to {plot_path}")
 
 
-def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
+def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None, train_ppo=True):
     callback = PPOCallback(
         verbose=1, save_path=save_path, eval_env=test_vec_env, logger=logger
     )
@@ -313,6 +315,8 @@ def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
     else:
         model = next_model(model, vec_env)
 
+    print("Training model...")
+    logger.info("Training model...")
     if bc_policy is not None:
         warm_start(model, vec_env, bc_policy, task_name=save_path, test_vec_env=test_vec_env)
         print("Saving model after warm start...")
@@ -324,9 +328,8 @@ def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
             test_vec_env.venv.envs[0],
             f"Warm Start {save_path}",
         )
-    print("Training model...")
-    logger.info("Training model...")
-    model.learn(training_iterations, callback=callback)
+    if train_ppo:
+        model.learn(training_iterations, callback=callback)
     vec_env.close()
     return model
 
