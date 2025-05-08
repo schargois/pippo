@@ -12,12 +12,12 @@ import torch
 from torch.utils.data import DataLoader, TensorDataset
 import torch.nn.functional as F
 
-
 import sys
 import os
 import time
 import random
 import numpy as np
+import matplotlib.pyplot as plt
 import logging
 
 # os.environ["MUJOCO_GL"] = "glfw"
@@ -53,14 +53,13 @@ hyperparams = {
 datetime_str = time.strftime("%Y-%m-%d_%H-%M-%S")
 
 logging.basicConfig(
-    filename=f'run_{datetime_str}.log',
+    filename=f"run_{datetime_str}.log",
     level=logging.INFO,
-    format='%(asctime)s %(message)s',
-    filemode='w'
+    format="%(asctime)s %(message)s",
+    filemode="w",
 )
 
 logger = logging.getLogger()
-
 
 
 def next_model(model, env):
@@ -166,7 +165,13 @@ def make_envs(env_class, train_tasks, test_tasks, render=False, normalizer_sourc
 
 
 def warm_start(
-    model, vec_env, expert_policy, num_steps=10024, batch_size=128, bc_epochs=200
+    model,
+    vec_env,
+    expert_policy,
+    num_steps=10024,
+    batch_size=128,
+    bc_epochs=200,
+    task_name="task",
 ):
     """
     Pre-train both the policy and value networks using behavior cloning from the expert policy.
@@ -216,6 +221,13 @@ def warm_start(
     print("Training actor and critic networks via behavior cloning...")
     logger.info("Training actor and critic networks via behavior cloning...")
     policy.train()
+
+    actor_losses = []
+    critic_losses = []
+    reward_vals = []
+    success_vals = []
+    eval_epochs = []
+
     for epoch in range(bc_epochs):
         total_actor_loss = 0
         total_critic_loss = 0
@@ -239,12 +251,23 @@ def warm_start(
             total_actor_loss += actor_loss.item()
             total_critic_loss += critic_loss.item()
 
-        if epoch % 20 == 0:
+        avg_actor_loss = total_actor_loss / len(loader)
+        avg_critic_loss = total_critic_loss / len(loader)
+        actor_losses.append(avg_actor_loss)
+        critic_losses.append(avg_critic_loss)
+
+        if epoch % 20 == 0 or epoch == bc_epochs - 1:
             print(
                 f"Epoch {epoch+1}/{bc_epochs} | "
-                f"Actor Loss: {total_actor_loss/len(loader):.5f} | "
-                f"Critic Loss: {total_critic_loss/len(loader):.5f}"
+                f"Actor Loss: {avg_actor_loss:.5f} | "
+                f"Critic Loss: {avg_critic_loss:.5f}"
             )
+            success, reward = test_on_env(
+                vec_env, env, model, num_episodes=20, progress=False
+            )
+            reward_vals.append(reward)
+            success_vals.append(success)
+            eval_epochs.append(epoch)
             logger.info(
                 f"Epoch {epoch+1}/{bc_epochs} | "
                 f"Actor Loss: {total_actor_loss/len(loader):.5f} | "
@@ -253,16 +276,31 @@ def warm_start(
 
     print("Warm start complete.")
     logger.info("Warm start complete.")
+    os.makedirs("plots", exist_ok=True)
+    plot_path = f"plots/warm_start_eval_plot_{task_name}.png"
+    plt.figure()
+    plt.plot(eval_epochs, reward_vals, label="Avg Reward (20 episodes)", marker="o")
+    plt.plot(eval_epochs, success_vals, label="Success Rate (20 episodes)", marker="s")
+    plt.xlabel("Epoch")
+    plt.ylabel("Performance")
+    plt.title(f"Warm Start Evaluation - {task_name}")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(plot_path)
+    print(f"Saved plot to {plot_path}")
+
 
 def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
-    callback = PPOCallback(verbose=1, save_path=save_path, eval_env=test_vec_env, logger=logger)
+    callback = PPOCallback(
+        verbose=1, save_path=save_path, eval_env=test_vec_env, logger=logger
+    )
     if model is None:
         model = PPO(CustomActorCriticPolicy, vec_env, verbose=verbose, **hyperparams)
     else:
         model = next_model(model, vec_env)
 
     if bc_policy is not None:
-        warm_start(model, vec_env, bc_policy)
+        warm_start(model, vec_env, bc_policy, task_name=save_path)
         print("Saving model after warm start...")
         logger.info("Saving model after warm start...")
         PPO.save(model, "warm-" + save_path)
@@ -286,6 +324,7 @@ def evaluate_model(model_path, env_vec, env_raw, label):
     print(f"{label} Success percentage:", success)
     logger.info(f"{label} Total reward: {reward}")
     logger.info(f"{label} Success percentage: {success}")
+
 
 ############################
 ###### BEGIN TRAINING ######
