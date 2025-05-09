@@ -335,8 +335,12 @@ def train_tier(
         else:
             model = next_model(model, vec_env)
     elif model is None:
-        print("Model is None and not using PNN, will not train across tasks.")
-        logger.info("Model is None and not using PNN, will not train across tasks.")
+        print(
+            "Model is None and not using PNN, will not train across tasks. Unless first task."
+        )
+        logger.info(
+            "Model is None and not using PNN, will not train across tasks. Unless first task."
+        )
         model = PPO("MlpPolicy", vec_env, verbose=verbose, **hyperparams)
 
     print("Training model...")
