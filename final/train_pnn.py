@@ -175,6 +175,7 @@ def warm_start(
     batch_size=128,
     bc_epochs=bc_epochs,
     task_name="task",
+    test_vec_env=None,
 ):
     """
     Pre-train both the policy and value networks using behavior cloning from the expert policy.
@@ -266,7 +267,7 @@ def warm_start(
                 f"Critic Loss: {avg_critic_loss:.5f}"
             )
             success, reward = test_on_env(
-                vec_env, env, model, num_episodes=20, progress=False
+                test_vec_env, test_vec_env.venv.envs[0], model, num_episodes=20, progress=False
             )
             reward_vals.append(reward)
             success_vals.append(success)
@@ -280,13 +281,23 @@ def warm_start(
     print("Warm start complete.")
     logger.info("Warm start complete.")
     os.makedirs("plots", exist_ok=True)
-    plot_path = f"plots/warm_start_eval_plot_{task_name}.png"
+    plot_path = f"plots/warm_start_rew_plot_{task_name}.png"
     plt.figure()
     plt.plot(eval_epochs, reward_vals, label="Avg Reward (20 episodes)", marker="o")
+    plt.xlabel("Epoch")
+    plt.ylabel("Reward")
+    plt.title(f"Warm Start Reward - {task_name}")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(plot_path)
+    print(f"Saved plot to {plot_path}")
+
+    plot_path = f"plots/warm_start_suc_plot_{task_name}.png"
+    plt.figure()
     plt.plot(eval_epochs, success_vals, label="Success Rate (20 episodes)", marker="s")
     plt.xlabel("Epoch")
-    plt.ylabel("Performance")
-    plt.title(f"Warm Start Evaluation - {task_name}")
+    plt.ylabel("Success Rate")
+    plt.title(f"Warm Start Success Rate - {task_name}")
     plt.legend()
     plt.grid(True)
     plt.savefig(plot_path)
@@ -303,7 +314,7 @@ def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None):
         model = next_model(model, vec_env)
 
     if bc_policy is not None:
-        warm_start(model, vec_env, bc_policy, task_name=save_path)
+        warm_start(model, vec_env, bc_policy, task_name=save_path, test_vec_env=test_vec_env)
         print("Saving model after warm start...")
         logger.info("Saving model after warm start...")
         PPO.save(model, "warm-" + save_path)
