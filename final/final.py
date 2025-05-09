@@ -22,17 +22,54 @@ import random
 import argparse
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--mode", type=str, help="Training mode (e.g., ppo, bc+pnn)")
 parser.add_argument(
-    "--mode",
-    type=str,
-    help="Training mode (e.g., ppo, bc+pnn). If not provided, runs all modes.",
+    "--csv-path", type=str, help="Path to shared CSV for logging results and plotting"
+)
+parser.add_argument(
+    "--timestamp", type=str, help="Shared timestamp across subprocesses"
 )
 args = parser.parse_args()
 
-if args.mode:
-    mode_list = [args.mode]
-else:
-    mode_list = ["ppo", "bc+pnn", "ppo+pnn", "bc+ppo+pnn"]
+timestamp = time.strftime("%Y-%m-%d_%H-%M-%S")
+csv_path = args.csv_path or f"plots/eval_results_{timestamp}.csv"
+os.makedirs("plots", exist_ok=True)
+
+# Case 1: If ONLY --csv-path is passed, generate plots
+if not args.mode and args.csv_path:
+    print(f"Generating plots from existing CSV: {csv_path}")
+    summary_df = pd.read_csv(csv_path)
+
+    for metric in ["SuccessRate", "AvgReward"]:
+        pivot = summary_df[summary_df.Context == "Current"].pivot(
+            index="Task", columns="Mode", values=metric
+        )
+        pivot.plot(kind="bar", title=f"{metric} by Mode and Task")
+        plt.ylabel(metric)
+        plt.xticks(rotation=0)
+        plt.tight_layout()
+        plt.savefig(f"plots/summary_{metric}_{timestamp}.png")
+        plt.close()
+
+    transfer_df = summary_df[summary_df.Context.str.startswith("After")]
+    if not transfer_df.empty:
+        transfer_df["ContextLabel"] = (
+            transfer_df["Task"] + " (" + transfer_df["Context"] + ")"
+        )
+        for metric in ["SuccessRate", "AvgReward"]:
+            pivot = transfer_df.pivot(
+                index="ContextLabel", columns="Mode", values=metric
+            )
+            pivot.plot(kind="bar", title=f"{metric} on Previous Tasks")
+            plt.ylabel(metric)
+            plt.xticks(rotation=45, ha="right")
+            plt.tight_layout()
+            plt.savefig(f"plots/transfer_{metric}_{timestamp}.png")
+            plt.close()
+    exit()
+
+
+mode_list = [args.mode] if args.mode else ["ppo", "bc+pnn", "ppo+pnn", "bc+ppo+pnn"]
 
 
 def logprint(msg):
@@ -44,7 +81,7 @@ seed = 42
 np.random.seed(seed)
 random.seed(seed)
 
-datetime_str = time.strftime("%Y-%m-%d_%H-%M-%S")
+datetime_str = args.timestamp or time.strftime("%Y-%m-%d_%H-%M-%S")
 
 logging.basicConfig(
     filename=f"eval_run_{datetime_str}.log",
@@ -55,10 +92,11 @@ logging.basicConfig(
 logger = logging.getLogger()
 
 os.makedirs("plots", exist_ok=True)
-csv_path = f"plots/eval_results_{datetime_str}.csv"
-with open(csv_path, mode="w", newline="") as f:
-    writer = csv.writer(f)
-    writer.writerow(["Mode", "Task", "Context", "SuccessRate", "AvgReward"])
+csv_path = args.csv_path or f"plots/eval_results_{datetime_str}.csv"
+if not os.path.exists(csv_path):
+    with open(csv_path, mode="w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Mode", "Task", "Context", "SuccessRate", "AvgReward"])
 
 tiers = [
     {
@@ -149,33 +187,36 @@ for mode in mode_list:
 logprint("\nFinal evaluation file complete. All combinations have been run.")
 logprint(f"Results saved to {csv_path}")
 
-# Summary plots
-summary_df = pd.read_csv(csv_path)
+if not args.mode and not args.csv_path:
+    # Summary plots
+    summary_df = pd.read_csv(csv_path)
 
-for metric in ["SuccessRate", "AvgReward"]:
-    pivot = summary_df[summary_df.Context == "Current"].pivot(
-        index="Task", columns="Mode", values=metric
-    )
-    pivot.plot(kind="bar", title=f"{metric} by Mode and Task")
-    plt.ylabel(metric)
-    plt.xticks(rotation=0)
-    plt.tight_layout()
-    plt.savefig(f"plots/summary_{metric}_{datetime_str}.png")
-    plt.close()
-
-# Transfer (backward) plots
-for metric in ["SuccessRate", "AvgReward"]:
-    transfer_df = summary_df[summary_df.Context.str.startswith("After")]
-    if not transfer_df.empty:
-        transfer_df["ContextLabel"] = (
-            transfer_df["Task"] + " (" + transfer_df["Context"] + ")"
+    for metric in ["SuccessRate", "AvgReward"]:
+        pivot = summary_df[summary_df.Context == "Current"].pivot(
+            index="Task", columns="Mode", values=metric
         )
-        pivot = transfer_df.pivot(index="ContextLabel", columns="Mode", values=metric)
-        pivot.plot(kind="bar", title=f"{metric} on Previous Tasks")
+        pivot.plot(kind="bar", title=f"{metric} by Mode and Task")
         plt.ylabel(metric)
-        plt.xticks(rotation=45, ha="right")
+        plt.xticks(rotation=0)
         plt.tight_layout()
-        plt.savefig(f"plots/transfer_{metric}_{datetime_str}.png")
+        plt.savefig(f"plots/summary_{metric}_{datetime_str}.png")
         plt.close()
 
-logprint("Summary and transfer plots saved.")
+    # Transfer (backward) plots
+    for metric in ["SuccessRate", "AvgReward"]:
+        transfer_df = summary_df[summary_df.Context.str.startswith("After")]
+        if not transfer_df.empty:
+            transfer_df["ContextLabel"] = (
+                transfer_df["Task"] + " (" + transfer_df["Context"] + ")"
+            )
+            pivot = transfer_df.pivot(
+                index="ContextLabel", columns="Mode", values=metric
+            )
+            pivot.plot(kind="bar", title=f"{metric} on Previous Tasks")
+            plt.ylabel(metric)
+            plt.xticks(rotation=45, ha="right")
+            plt.tight_layout()
+            plt.savefig(f"plots/transfer_{metric}_{datetime_str}.png")
+            plt.close()
+
+    logprint("Summary and transfer plots saved.")
