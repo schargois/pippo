@@ -19,6 +19,21 @@ from metaworld import MT1
 import numpy as np
 import random
 
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--mode",
+    type=str,
+    help="Training mode (e.g., ppo, bc+pnn). If not provided, runs all modes.",
+)
+args = parser.parse_args()
+
+if args.mode:
+    mode_list = [args.mode]
+else:
+    mode_list = ["ppo", "bc+pnn", "ppo+pnn", "bc+ppo+pnn"]
+
 
 def logprint(msg):
     print(msg)
@@ -68,7 +83,7 @@ tiers = [
 
 all_results = {}
 
-for mode in ["ppo", "bc+pnn", "ppo+pnn", "bc+ppo+pnn"]:
+for mode in mode_list:
     logprint(f"\n===== Starting Evaluation Mode: {mode} =====")
     model = None
     shared_normalizer = None
