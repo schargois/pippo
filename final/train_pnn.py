@@ -306,14 +306,33 @@ def warm_start(
     print(f"Saved plot to {plot_path}")
 
 
-def train_tier(save_path, model, vec_env, test_vec_env, bc_policy=None, train_ppo=True):
+def train_tier(
+    save_path,
+    model,
+    vec_env,
+    test_vec_env,
+    bc_policy=None,
+    train_ppo=True,
+    use_pnn=True,
+):
+    """
+    set model argument to Normal PPO if not using PNN
+    """
     callback = PPOCallback(
         verbose=1, save_path=save_path, eval_env=test_vec_env, logger=logger
     )
-    if model is None:
-        model = PPO(CustomActorCriticPolicy, vec_env, verbose=verbose, **hyperparams)
-    else:
-        model = next_model(model, vec_env)
+
+    if use_pnn:
+        if model is None:
+            model = PPO(
+                CustomActorCriticPolicy, vec_env, verbose=verbose, **hyperparams
+            )
+        else:
+            model = next_model(model, vec_env)
+    elif model is None:
+        print("Model is None and not using PNN, will not train across tasks.")
+        logger.info("Model is None and not using PNN, will not train across tasks.")
+        model = PPO("MlpPolicy", vec_env, verbose=verbose, **hyperparams)
 
     print("Training model...")
     logger.info("Training model...")
