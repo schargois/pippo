@@ -46,13 +46,24 @@ with open(csv_path, mode="w", newline="") as f:
     writer.writerow(["Mode", "Task", "Context", "SuccessRate", "AvgReward"])
 
 tiers = [
-    {"name": "reach-v2", "label": "Reach", "policy": SawyerReachV2Policy()},
+    {
+        "name": "reach-v2",
+        "label": "Reach",
+        "policy": SawyerReachV2Policy(),
+        "bc-epochs": 150,
+    },
     {
         "name": "pick-place-v2",
         "label": "Pick Place",
         "policy": SawyerPickPlaceV2Policy(),
+        "bc-epochs": 250,
     },
-    {"name": "hammer-v2", "label": "Hammer", "policy": SawyerHammerV2Policy()},
+    {
+        "name": "hammer-v2",
+        "label": "Hammer",
+        "policy": SawyerHammerV2Policy(),
+        "bc-epochs": 350,
+    },
 ]
 
 all_results = {}
@@ -67,6 +78,7 @@ for mode in ["ppo", "bc+pnn", "ppo+pnn", "bc+ppo+pnn"]:
         task_name = tier["name"]
         label = tier["label"]
         expert_policy = tier["policy"]
+        bc_epochs = tier["bc-epochs"]
 
         mode_tag = f"{datetime_str}-{mode.replace('+', '_')}-{task_name}"
 
@@ -91,6 +103,7 @@ for mode in ["ppo", "bc+pnn", "ppo+pnn", "bc+ppo+pnn"]:
             bc_policy=expert_policy if "bc" in mode else None,
             train_ppo="ppo" in mode,
             use_pnn="pnn" in mode,
+            bc_epochs=bc_epochs,
         )
 
         logprint(f"Evaluating model on {task_name}...")

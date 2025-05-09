@@ -269,7 +269,11 @@ def warm_start(
                 f"Critic Loss: {avg_critic_loss:.5f}"
             )
             success, reward = test_on_env(
-                test_vec_env, test_vec_env.venv.envs[0], model, num_episodes=20, progress=False
+                test_vec_env,
+                test_vec_env.venv.envs[0],
+                model,
+                num_episodes=20,
+                progress=False,
             )
             reward_vals.append(reward)
             success_vals.append(success)
@@ -314,6 +318,7 @@ def train_tier(
     bc_policy=None,
     train_ppo=True,
     use_pnn=True,
+    bc_epochs=bc_epochs,
 ):
     """
     set model argument to Normal PPO if not using PNN
@@ -337,7 +342,14 @@ def train_tier(
     print("Training model...")
     logger.info("Training model...")
     if bc_policy is not None:
-        warm_start(model, vec_env, bc_policy, task_name=save_path, test_vec_env=test_vec_env)
+        warm_start(
+            model,
+            vec_env,
+            bc_policy,
+            task_name=save_path,
+            test_vec_env=test_vec_env,
+            bc_epochs=bc_epochs,
+        )
         print("Saving model after warm start...")
         logger.info("Saving model after warm start...")
         PPO.save(model, "warm-" + save_path)
