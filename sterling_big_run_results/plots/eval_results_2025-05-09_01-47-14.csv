@@ -1,0 +1,25 @@
+Mode,Task,Context,SuccessRate,AvgReward
+ppo,Reach,Current,0.0,4721.69873046875
+ppo,Pick Place,Current,0.0,4.2102885246276855
+ppo,Reach,After Pick Place,0.0,4763.14892578125
+ppo,Hammer,Current,0.0,461.72198486328125
+ppo,Reach,After Hammer,0.0,4858.017578125
+ppo,Pick Place,After Hammer,0.0,4.043344020843506
+bc+pnn,Reach,Current,0.87,2883.913818359375
+bc+pnn,Pick Place,Current,0.96,71.83609008789062
+bc+pnn,Reach,After Pick Place,0.83,1189.6385498046875
+bc+pnn,Hammer,Current,0.9,472.4335021972656
+bc+pnn,Reach,After Hammer,0.16,484.3785400390625
+bc+pnn,Pick Place,After Hammer,0.0,2.6348776817321777
+ppo+pnn,Reach,Current,0.0,4728.0107421875
+ppo+pnn,Pick Place,Current,0.0,6.519679069519043
+ppo+pnn,Reach,After Pick Place,0.0,256.7926940917969
+ppo+pnn,Hammer,Current,0.0,437.1542053222656
+ppo+pnn,Reach,After Hammer,0.0,373.2563781738281
+ppo+pnn,Pick Place,After Hammer,0.0,2.827207326889038
+bc+ppo+pnn,Reach,Current,0.0,361.26324462890625
+bc+ppo+pnn,Pick Place,Current,0.07,67.54065704345703
+bc+ppo+pnn,Reach,After Pick Place,0.18,613.0269775390625
+bc+ppo+pnn,Hammer,Current,0.0,323.6181945800781
+bc+ppo+pnn,Reach,After Hammer,0.0,244.7261199951172
+bc+ppo+pnn,Pick Place,After Hammer,0.0,2.5384418964385986

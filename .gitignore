@@ -180,3 +180,5 @@ cython_debug/
 /*-v2.zip
 plots/
 plots*/*
+!sterling_big_run_results/*
+!BigTrial_sharednorm_withentropy/

@@ -1,0 +1,960 @@
+2025-05-09 01:47:23,462 
+===== Starting Evaluation Mode: ppo =====
+2025-05-09 01:47:24,526 Model is None and not using PNN, will not train across tasks. Unless first task.
+2025-05-09 01:47:27,181 Training model...
+2025-05-09 01:48:19,422 evaluating self.num_timesteps=1024, mean_reward=1384.7657470703125=======
+2025-05-09 01:48:19,422 evaluating self.num_timesteps=1024, success=0.0=======
+2025-05-09 01:48:19,449 model saved on eval reward: 1384.7657470703125
+2025-05-09 01:48:19,450 --------------------
+2025-05-09 01:49:08,772 evaluating self.num_timesteps=2048, mean_reward=753.99951171875=======
+2025-05-09 01:49:08,774 evaluating self.num_timesteps=2048, success=0.25=======
+2025-05-09 01:49:08,774 --------------------
+2025-05-09 01:50:01,755 evaluating self.num_timesteps=3072, mean_reward=462.746337890625=======
+2025-05-09 01:50:01,756 evaluating self.num_timesteps=3072, success=0.05=======
+2025-05-09 01:50:01,756 --------------------
+2025-05-09 01:50:54,823 evaluating self.num_timesteps=4096, mean_reward=495.022705078125=======
+2025-05-09 01:50:54,824 evaluating self.num_timesteps=4096, success=0.05=======
+2025-05-09 01:50:54,824 --------------------
+2025-05-09 01:51:47,536 evaluating self.num_timesteps=5120, mean_reward=827.0172119140625=======
+2025-05-09 01:51:47,536 evaluating self.num_timesteps=5120, success=0.15=======
+2025-05-09 01:51:47,536 --------------------
+2025-05-09 01:52:53,687 evaluating self.num_timesteps=6144, mean_reward=1335.9913330078125=======
+2025-05-09 01:52:53,687 evaluating self.num_timesteps=6144, success=0.05=======
+2025-05-09 01:52:53,687 --------------------
+2025-05-09 01:54:01,855 evaluating self.num_timesteps=7168, mean_reward=1134.623046875=======
+2025-05-09 01:54:01,855 evaluating self.num_timesteps=7168, success=0.05=======
+2025-05-09 01:54:01,855 --------------------
+2025-05-09 01:55:06,783 evaluating self.num_timesteps=8192, mean_reward=1370.7210693359375=======
+2025-05-09 01:55:06,783 evaluating self.num_timesteps=8192, success=0.25=======
+2025-05-09 01:55:06,783 --------------------
+2025-05-09 01:56:11,411 evaluating self.num_timesteps=9216, mean_reward=1306.712646484375=======
+2025-05-09 01:56:11,412 evaluating self.num_timesteps=9216, success=0.2=======
+2025-05-09 01:56:11,412 --------------------
+2025-05-09 01:57:16,659 evaluating self.num_timesteps=10240, mean_reward=1553.6573486328125=======
+2025-05-09 01:57:16,660 evaluating self.num_timesteps=10240, success=0.15=======
+2025-05-09 01:57:16,671 model saved on eval reward: 1553.6573486328125
+2025-05-09 01:57:16,671 --------------------
+2025-05-09 01:58:25,317 evaluating self.num_timesteps=11264, mean_reward=1721.0634765625=======
+2025-05-09 01:58:25,317 evaluating self.num_timesteps=11264, success=0.05=======
+2025-05-09 01:58:25,325 model saved on eval reward: 1721.0634765625
+2025-05-09 01:58:25,326 --------------------
+2025-05-09 01:59:33,195 evaluating self.num_timesteps=12288, mean_reward=1950.779052734375=======
+2025-05-09 01:59:33,195 evaluating self.num_timesteps=12288, success=0.1=======
+2025-05-09 01:59:33,206 model saved on eval reward: 1950.779052734375
+2025-05-09 01:59:33,206 --------------------
+2025-05-09 02:00:34,832 evaluating self.num_timesteps=13312, mean_reward=2316.259033203125=======
+2025-05-09 02:00:34,832 evaluating self.num_timesteps=13312, success=0.3=======
+2025-05-09 02:00:34,844 model saved on eval reward: 2316.259033203125
+2025-05-09 02:00:34,844 --------------------
+2025-05-09 02:01:35,261 evaluating self.num_timesteps=14336, mean_reward=2635.162841796875=======
+2025-05-09 02:01:35,261 evaluating self.num_timesteps=14336, success=0.3=======
+2025-05-09 02:01:35,267 model saved on eval reward: 2635.162841796875
+2025-05-09 02:01:35,267 --------------------
+2025-05-09 02:02:37,448 evaluating self.num_timesteps=15360, mean_reward=2797.546875=======
+2025-05-09 02:02:37,448 evaluating self.num_timesteps=15360, success=0.2=======
+2025-05-09 02:02:37,458 model saved on eval reward: 2797.546875
+2025-05-09 02:02:37,459 --------------------
+2025-05-09 02:03:37,020 evaluating self.num_timesteps=16384, mean_reward=2722.83154296875=======
+2025-05-09 02:03:37,021 evaluating self.num_timesteps=16384, success=0.15=======
+2025-05-09 02:03:37,021 --------------------
+2025-05-09 02:04:38,259 evaluating self.num_timesteps=17408, mean_reward=2809.326904296875=======
+2025-05-09 02:04:38,259 evaluating self.num_timesteps=17408, success=0.3=======
+2025-05-09 02:04:38,269 model saved on eval reward: 2809.326904296875
+2025-05-09 02:04:38,270 --------------------
+2025-05-09 02:05:37,552 evaluating self.num_timesteps=18432, mean_reward=2305.8251953125=======
+2025-05-09 02:05:37,552 evaluating self.num_timesteps=18432, success=0.35=======
+2025-05-09 02:05:37,552 --------------------
+2025-05-09 02:06:39,881 evaluating self.num_timesteps=19456, mean_reward=2295.94580078125=======
+2025-05-09 02:06:39,881 evaluating self.num_timesteps=19456, success=0.25=======
+2025-05-09 02:06:39,881 --------------------
+2025-05-09 02:07:41,558 evaluating self.num_timesteps=20480, mean_reward=2639.298828125=======
+2025-05-09 02:07:41,559 evaluating self.num_timesteps=20480, success=0.3=======
+2025-05-09 02:07:41,559 --------------------
+2025-05-09 02:08:41,040 evaluating self.num_timesteps=21504, mean_reward=2753.599609375=======
+2025-05-09 02:08:41,041 evaluating self.num_timesteps=21504, success=0.3=======
+2025-05-09 02:08:41,041 --------------------
+2025-05-09 02:09:36,948 evaluating self.num_timesteps=22528, mean_reward=2882.493408203125=======
+2025-05-09 02:09:36,948 evaluating self.num_timesteps=22528, success=0.35=======
+2025-05-09 02:09:36,959 model saved on eval reward: 2882.493408203125
+2025-05-09 02:09:36,960 --------------------
+2025-05-09 02:10:33,346 evaluating self.num_timesteps=23552, mean_reward=2947.72412109375=======
+2025-05-09 02:10:33,346 evaluating self.num_timesteps=23552, success=0.35=======
+2025-05-09 02:10:33,354 model saved on eval reward: 2947.72412109375
+2025-05-09 02:10:33,355 --------------------
+2025-05-09 02:11:25,696 evaluating self.num_timesteps=24576, mean_reward=2667.616943359375=======
+2025-05-09 02:11:25,696 evaluating self.num_timesteps=24576, success=0.6=======
+2025-05-09 02:11:25,696 --------------------
+2025-05-09 02:12:28,047 evaluating self.num_timesteps=25600, mean_reward=2744.66357421875=======
+2025-05-09 02:12:28,047 evaluating self.num_timesteps=25600, success=0.25=======
+2025-05-09 02:12:28,047 --------------------
+2025-05-09 02:13:24,903 evaluating self.num_timesteps=26624, mean_reward=2748.22314453125=======
+2025-05-09 02:13:24,904 evaluating self.num_timesteps=26624, success=0.45=======
+2025-05-09 02:13:24,905 --------------------
+2025-05-09 02:14:26,355 evaluating self.num_timesteps=27648, mean_reward=2945.494384765625=======
+2025-05-09 02:14:26,355 evaluating self.num_timesteps=27648, success=0.3=======
+2025-05-09 02:14:26,356 --------------------
+2025-05-09 02:15:28,526 evaluating self.num_timesteps=28672, mean_reward=3435.6796875=======
+2025-05-09 02:15:28,526 evaluating self.num_timesteps=28672, success=0.25=======
+2025-05-09 02:15:28,537 model saved on eval reward: 3435.6796875
+2025-05-09 02:15:28,537 --------------------
+2025-05-09 02:16:32,430 evaluating self.num_timesteps=29696, mean_reward=3386.462890625=======
+2025-05-09 02:16:32,430 evaluating self.num_timesteps=29696, success=0.2=======
+2025-05-09 02:16:32,432 --------------------
+2025-05-09 02:17:39,583 evaluating self.num_timesteps=30720, mean_reward=3137.13623046875=======
+2025-05-09 02:17:39,583 evaluating self.num_timesteps=30720, success=0.1=======
+2025-05-09 02:17:39,583 --------------------
+2025-05-09 02:18:47,872 evaluating self.num_timesteps=31744, mean_reward=2939.339111328125=======
+2025-05-09 02:18:47,872 evaluating self.num_timesteps=31744, success=0.05=======
+2025-05-09 02:18:47,872 --------------------
+2025-05-09 02:19:54,143 evaluating self.num_timesteps=32768, mean_reward=2903.455322265625=======
+2025-05-09 02:19:54,143 evaluating self.num_timesteps=32768, success=0.1=======
+2025-05-09 02:19:54,143 --------------------
+2025-05-09 02:21:04,573 evaluating self.num_timesteps=33792, mean_reward=3101.06787109375=======
+2025-05-09 02:21:04,573 evaluating self.num_timesteps=33792, success=0.0=======
+2025-05-09 02:21:04,574 --------------------
+2025-05-09 02:22:13,833 evaluating self.num_timesteps=34816, mean_reward=3105.36279296875=======
+2025-05-09 02:22:13,833 evaluating self.num_timesteps=34816, success=0.0=======
+2025-05-09 02:22:13,833 --------------------
+2025-05-09 02:23:23,321 evaluating self.num_timesteps=35840, mean_reward=2845.170166015625=======
+2025-05-09 02:23:23,321 evaluating self.num_timesteps=35840, success=0.0=======
+2025-05-09 02:23:23,321 --------------------
+2025-05-09 02:24:32,638 evaluating self.num_timesteps=36864, mean_reward=2998.192626953125=======
+2025-05-09 02:24:32,638 evaluating self.num_timesteps=36864, success=0.0=======
+2025-05-09 02:24:32,638 --------------------
+2025-05-09 02:25:42,239 evaluating self.num_timesteps=37888, mean_reward=3315.516845703125=======
+2025-05-09 02:25:42,239 evaluating self.num_timesteps=37888, success=0.0=======
+2025-05-09 02:25:42,239 --------------------
+2025-05-09 02:26:51,742 evaluating self.num_timesteps=38912, mean_reward=3269.66943359375=======
+2025-05-09 02:26:51,742 evaluating self.num_timesteps=38912, success=0.0=======
+2025-05-09 02:26:51,742 --------------------
+2025-05-09 02:28:00,927 evaluating self.num_timesteps=39936, mean_reward=3339.935546875=======
+2025-05-09 02:28:00,927 evaluating self.num_timesteps=39936, success=0.0=======
+2025-05-09 02:28:00,930 --------------------
+2025-05-09 02:29:10,359 evaluating self.num_timesteps=40960, mean_reward=3731.27685546875=======
+2025-05-09 02:29:10,359 evaluating self.num_timesteps=40960, success=0.0=======
+2025-05-09 02:29:10,370 model saved on eval reward: 3731.27685546875
+2025-05-09 02:29:10,370 --------------------
+2025-05-09 02:30:19,264 evaluating self.num_timesteps=41984, mean_reward=3438.30029296875=======
+2025-05-09 02:30:19,264 evaluating self.num_timesteps=41984, success=0.0=======
+2025-05-09 02:30:19,264 --------------------
+2025-05-09 02:31:28,074 evaluating self.num_timesteps=43008, mean_reward=3386.70458984375=======
+2025-05-09 02:31:28,074 evaluating self.num_timesteps=43008, success=0.0=======
+2025-05-09 02:31:28,075 --------------------
+2025-05-09 02:32:37,252 evaluating self.num_timesteps=44032, mean_reward=3804.20751953125=======
+2025-05-09 02:32:37,252 evaluating self.num_timesteps=44032, success=0.0=======
+2025-05-09 02:32:37,262 model saved on eval reward: 3804.20751953125
+2025-05-09 02:32:37,262 --------------------
+2025-05-09 02:33:47,166 evaluating self.num_timesteps=45056, mean_reward=3896.744873046875=======
+2025-05-09 02:33:47,166 evaluating self.num_timesteps=45056, success=0.0=======
+2025-05-09 02:33:47,176 model saved on eval reward: 3896.744873046875
+2025-05-09 02:33:47,176 --------------------
+2025-05-09 02:34:54,384 evaluating self.num_timesteps=46080, mean_reward=3612.69775390625=======
+2025-05-09 02:34:54,384 evaluating self.num_timesteps=46080, success=0.0=======
+2025-05-09 02:34:54,384 --------------------
+2025-05-09 02:36:03,879 evaluating self.num_timesteps=47104, mean_reward=3481.723388671875=======
+2025-05-09 02:36:03,880 evaluating self.num_timesteps=47104, success=0.0=======
+2025-05-09 02:36:03,882 --------------------
+2025-05-09 02:37:12,920 evaluating self.num_timesteps=48128, mean_reward=4006.33251953125=======
+2025-05-09 02:37:12,920 evaluating self.num_timesteps=48128, success=0.0=======
+2025-05-09 02:37:12,928 model saved on eval reward: 4006.33251953125
+2025-05-09 02:37:12,928 --------------------
+2025-05-09 02:38:22,740 evaluating self.num_timesteps=49152, mean_reward=3953.46044921875=======
+2025-05-09 02:38:22,740 evaluating self.num_timesteps=49152, success=0.0=======
+2025-05-09 02:38:22,742 --------------------
+2025-05-09 02:39:31,928 evaluating self.num_timesteps=50176, mean_reward=4340.5458984375=======
+2025-05-09 02:39:31,928 evaluating self.num_timesteps=50176, success=0.0=======
+2025-05-09 02:39:31,939 model saved on eval reward: 4340.5458984375
+2025-05-09 02:39:31,940 --------------------
+2025-05-09 02:40:41,222 evaluating self.num_timesteps=51200, mean_reward=4330.2734375=======
+2025-05-09 02:40:41,222 evaluating self.num_timesteps=51200, success=0.0=======
+2025-05-09 02:40:41,222 --------------------
+2025-05-09 02:41:49,294 evaluating self.num_timesteps=52224, mean_reward=4347.24169921875=======
+2025-05-09 02:41:49,295 evaluating self.num_timesteps=52224, success=0.0=======
+2025-05-09 02:41:49,304 model saved on eval reward: 4347.24169921875
+2025-05-09 02:41:49,305 --------------------
+2025-05-09 02:42:54,873 evaluating self.num_timesteps=53248, mean_reward=4354.9931640625=======
+2025-05-09 02:42:54,873 evaluating self.num_timesteps=53248, success=0.0=======
+2025-05-09 02:42:54,879 model saved on eval reward: 4354.9931640625
+2025-05-09 02:42:54,879 --------------------
+2025-05-09 02:44:03,714 evaluating self.num_timesteps=54272, mean_reward=4423.7041015625=======
+2025-05-09 02:44:03,714 evaluating self.num_timesteps=54272, success=0.0=======
+2025-05-09 02:44:03,721 model saved on eval reward: 4423.7041015625
+2025-05-09 02:44:03,721 --------------------
+2025-05-09 02:45:12,822 evaluating self.num_timesteps=55296, mean_reward=4343.8232421875=======
+2025-05-09 02:45:12,822 evaluating self.num_timesteps=55296, success=0.0=======
+2025-05-09 02:45:12,822 --------------------
+2025-05-09 02:46:21,380 evaluating self.num_timesteps=56320, mean_reward=4601.4404296875=======
+2025-05-09 02:46:21,381 evaluating self.num_timesteps=56320, success=0.0=======
+2025-05-09 02:46:21,387 model saved on eval reward: 4601.4404296875
+2025-05-09 02:46:21,388 --------------------
+2025-05-09 02:47:28,229 evaluating self.num_timesteps=57344, mean_reward=4459.8779296875=======
+2025-05-09 02:47:28,229 evaluating self.num_timesteps=57344, success=0.0=======
+2025-05-09 02:47:28,229 --------------------
+2025-05-09 02:48:36,395 evaluating self.num_timesteps=58368, mean_reward=4432.0810546875=======
+2025-05-09 02:48:36,395 evaluating self.num_timesteps=58368, success=0.0=======
+2025-05-09 02:48:36,395 --------------------
+2025-05-09 02:49:45,339 evaluating self.num_timesteps=59392, mean_reward=4496.32861328125=======
+2025-05-09 02:49:45,340 evaluating self.num_timesteps=59392, success=0.0=======
+2025-05-09 02:49:45,340 --------------------
+2025-05-09 02:50:54,822 evaluating self.num_timesteps=60416, mean_reward=4568.07421875=======
+2025-05-09 02:50:54,822 evaluating self.num_timesteps=60416, success=0.0=======
+2025-05-09 02:50:54,822 --------------------
+2025-05-09 02:52:03,707 evaluating self.num_timesteps=61440, mean_reward=4454.61474609375=======
+2025-05-09 02:52:03,707 evaluating self.num_timesteps=61440, success=0.0=======
+2025-05-09 02:52:03,708 --------------------
+2025-05-09 02:53:13,095 evaluating self.num_timesteps=62464, mean_reward=4483.6181640625=======
+2025-05-09 02:53:13,095 evaluating self.num_timesteps=62464, success=0.0=======
+2025-05-09 02:53:13,097 --------------------
+2025-05-09 02:54:22,353 evaluating self.num_timesteps=63488, mean_reward=4380.5068359375=======
+2025-05-09 02:54:22,353 evaluating self.num_timesteps=63488, success=0.0=======
+2025-05-09 02:54:22,353 --------------------
+2025-05-09 02:55:31,816 evaluating self.num_timesteps=64512, mean_reward=4459.00048828125=======
+2025-05-09 02:55:31,816 evaluating self.num_timesteps=64512, success=0.0=======
+2025-05-09 02:55:31,816 --------------------
+2025-05-09 02:56:36,096 evaluating self.num_timesteps=65536, mean_reward=4564.0751953125=======
+2025-05-09 02:56:36,096 evaluating self.num_timesteps=65536, success=0.0=======
+2025-05-09 02:56:36,097 --------------------
+2025-05-09 02:57:45,342 evaluating self.num_timesteps=66560, mean_reward=4585.15625=======
+2025-05-09 02:57:45,342 evaluating self.num_timesteps=66560, success=0.0=======
+2025-05-09 02:57:45,342 --------------------
+2025-05-09 02:58:54,975 evaluating self.num_timesteps=67584, mean_reward=4620.5810546875=======
+2025-05-09 02:58:54,975 evaluating self.num_timesteps=67584, success=0.0=======
+2025-05-09 02:58:54,985 model saved on eval reward: 4620.5810546875
+2025-05-09 02:58:54,985 --------------------
+2025-05-09 02:59:58,127 evaluating self.num_timesteps=68608, mean_reward=4568.1005859375=======
+2025-05-09 02:59:58,127 evaluating self.num_timesteps=68608, success=0.0=======
+2025-05-09 02:59:58,128 --------------------
+2025-05-09 03:01:05,433 evaluating self.num_timesteps=69632, mean_reward=4666.6318359375=======
+2025-05-09 03:01:05,433 evaluating self.num_timesteps=69632, success=0.0=======
+2025-05-09 03:01:05,445 model saved on eval reward: 4666.6318359375
+2025-05-09 03:01:05,445 --------------------
+2025-05-09 03:02:14,669 evaluating self.num_timesteps=70656, mean_reward=4688.4775390625=======
+2025-05-09 03:02:14,669 evaluating self.num_timesteps=70656, success=0.0=======
+2025-05-09 03:02:14,679 model saved on eval reward: 4688.4775390625
+2025-05-09 03:02:14,679 --------------------
+2025-05-09 03:03:24,075 evaluating self.num_timesteps=71680, mean_reward=4636.111328125=======
+2025-05-09 03:03:24,075 evaluating self.num_timesteps=71680, success=0.0=======
+2025-05-09 03:03:24,075 --------------------
+2025-05-09 03:04:34,201 evaluating self.num_timesteps=72704, mean_reward=4687.3486328125=======
+2025-05-09 03:04:34,201 evaluating self.num_timesteps=72704, success=0.0=======
+2025-05-09 03:04:34,201 --------------------
+2025-05-09 03:05:43,741 evaluating self.num_timesteps=73728, mean_reward=4653.6025390625=======
+2025-05-09 03:05:43,741 evaluating self.num_timesteps=73728, success=0.0=======
+2025-05-09 03:05:43,742 --------------------
+2025-05-09 03:06:52,561 evaluating self.num_timesteps=74752, mean_reward=4548.1884765625=======
+2025-05-09 03:06:52,561 evaluating self.num_timesteps=74752, success=0.0=======
+2025-05-09 03:06:52,561 --------------------
+2025-05-09 03:07:59,217 evaluating self.num_timesteps=75776, mean_reward=4563.7548828125=======
+2025-05-09 03:07:59,217 evaluating self.num_timesteps=75776, success=0.0=======
+2025-05-09 03:07:59,217 --------------------
+2025-05-09 03:09:08,524 evaluating self.num_timesteps=76800, mean_reward=4536.6005859375=======
+2025-05-09 03:09:08,525 evaluating self.num_timesteps=76800, success=0.0=======
+2025-05-09 03:09:08,525 --------------------
+2025-05-09 03:10:17,128 evaluating self.num_timesteps=77824, mean_reward=4561.0634765625=======
+2025-05-09 03:10:17,128 evaluating self.num_timesteps=77824, success=0.0=======
+2025-05-09 03:10:17,128 --------------------
+2025-05-09 03:11:26,304 evaluating self.num_timesteps=78848, mean_reward=4541.30615234375=======
+2025-05-09 03:11:26,304 evaluating self.num_timesteps=78848, success=0.0=======
+2025-05-09 03:11:26,305 --------------------
+2025-05-09 03:12:34,627 evaluating self.num_timesteps=79872, mean_reward=4659.0361328125=======
+2025-05-09 03:12:34,628 evaluating self.num_timesteps=79872, success=0.0=======
+2025-05-09 03:12:34,628 --------------------
+2025-05-09 03:13:43,838 evaluating self.num_timesteps=80896, mean_reward=4436.3671875=======
+2025-05-09 03:13:43,838 evaluating self.num_timesteps=80896, success=0.0=======
+2025-05-09 03:13:43,838 --------------------
+2025-05-09 03:14:52,449 evaluating self.num_timesteps=81920, mean_reward=4539.81494140625=======
+2025-05-09 03:14:52,449 evaluating self.num_timesteps=81920, success=0.0=======
+2025-05-09 03:14:52,449 --------------------
+2025-05-09 03:16:01,803 evaluating self.num_timesteps=82944, mean_reward=4515.123046875=======
+2025-05-09 03:16:01,803 evaluating self.num_timesteps=82944, success=0.0=======
+2025-05-09 03:16:01,803 --------------------
+2025-05-09 03:17:10,674 evaluating self.num_timesteps=83968, mean_reward=4436.97607421875=======
+2025-05-09 03:17:10,674 evaluating self.num_timesteps=83968, success=0.0=======
+2025-05-09 03:17:10,675 --------------------
+2025-05-09 03:18:20,476 evaluating self.num_timesteps=84992, mean_reward=4669.6689453125=======
+2025-05-09 03:18:20,476 evaluating self.num_timesteps=84992, success=0.0=======
+2025-05-09 03:18:20,476 --------------------
+2025-05-09 03:19:29,898 evaluating self.num_timesteps=86016, mean_reward=4477.50439453125=======
+2025-05-09 03:19:29,898 evaluating self.num_timesteps=86016, success=0.0=======
+2025-05-09 03:19:29,898 --------------------
+2025-05-09 03:20:38,893 evaluating self.num_timesteps=87040, mean_reward=4427.45751953125=======
+2025-05-09 03:20:38,894 evaluating self.num_timesteps=87040, success=0.0=======
+2025-05-09 03:20:38,894 --------------------
+2025-05-09 03:21:47,947 evaluating self.num_timesteps=88064, mean_reward=4624.4775390625=======
+2025-05-09 03:21:47,947 evaluating self.num_timesteps=88064, success=0.0=======
+2025-05-09 03:21:47,947 --------------------
+2025-05-09 03:22:55,208 evaluating self.num_timesteps=89088, mean_reward=4569.65283203125=======
+2025-05-09 03:22:55,208 evaluating self.num_timesteps=89088, success=0.0=======
+2025-05-09 03:22:55,208 --------------------
+2025-05-09 03:24:05,299 evaluating self.num_timesteps=90112, mean_reward=4469.267578125=======
+2025-05-09 03:24:05,300 evaluating self.num_timesteps=90112, success=0.0=======
+2025-05-09 03:24:05,300 --------------------
+2025-05-09 03:25:14,890 evaluating self.num_timesteps=91136, mean_reward=4450.01953125=======
+2025-05-09 03:25:14,890 evaluating self.num_timesteps=91136, success=0.0=======
+2025-05-09 03:25:14,891 --------------------
+2025-05-09 03:26:24,076 evaluating self.num_timesteps=92160, mean_reward=4541.2021484375=======
+2025-05-09 03:26:24,077 evaluating self.num_timesteps=92160, success=0.0=======
+2025-05-09 03:26:24,077 --------------------
+2025-05-09 03:27:28,590 evaluating self.num_timesteps=93184, mean_reward=4548.32763671875=======
+2025-05-09 03:27:28,590 evaluating self.num_timesteps=93184, success=0.0=======
+2025-05-09 03:27:28,591 --------------------
+2025-05-09 03:28:34,090 evaluating self.num_timesteps=94208, mean_reward=4643.279296875=======
+2025-05-09 03:28:34,090 evaluating self.num_timesteps=94208, success=0.0=======
+2025-05-09 03:28:34,092 --------------------
+2025-05-09 03:29:43,107 evaluating self.num_timesteps=95232, mean_reward=4631.47509765625=======
+2025-05-09 03:29:43,107 evaluating self.num_timesteps=95232, success=0.0=======
+2025-05-09 03:29:43,107 --------------------
+2025-05-09 03:30:52,608 evaluating self.num_timesteps=96256, mean_reward=4556.80810546875=======
+2025-05-09 03:30:52,608 evaluating self.num_timesteps=96256, success=0.0=======
+2025-05-09 03:30:52,608 --------------------
+2025-05-09 03:32:01,504 evaluating self.num_timesteps=97280, mean_reward=4556.7548828125=======
+2025-05-09 03:32:01,504 evaluating self.num_timesteps=97280, success=0.0=======
+2025-05-09 03:32:01,504 --------------------
+2025-05-09 03:33:09,982 evaluating self.num_timesteps=98304, mean_reward=4609.76025390625=======
+2025-05-09 03:33:09,983 evaluating self.num_timesteps=98304, success=0.0=======
+2025-05-09 03:33:09,986 --------------------
+2025-05-09 03:34:19,535 evaluating self.num_timesteps=99328, mean_reward=4474.888671875=======
+2025-05-09 03:34:19,535 evaluating self.num_timesteps=99328, success=0.0=======
+2025-05-09 03:34:19,537 --------------------
+2025-05-09 03:35:23,936 evaluating self.num_timesteps=100352, mean_reward=4612.47412109375=======
+2025-05-09 03:35:23,936 evaluating self.num_timesteps=100352, success=0.0=======
+2025-05-09 03:35:23,937 --------------------
+2025-05-09 03:36:32,169 evaluating self.num_timesteps=101376, mean_reward=4555.48486328125=======
+2025-05-09 03:36:32,169 evaluating self.num_timesteps=101376, success=0.0=======
+2025-05-09 03:36:32,169 --------------------
+2025-05-09 03:37:41,274 evaluating self.num_timesteps=102400, mean_reward=4725.5146484375=======
+2025-05-09 03:37:41,274 evaluating self.num_timesteps=102400, success=0.0=======
+2025-05-09 03:37:41,284 model saved on eval reward: 4725.5146484375
+2025-05-09 03:37:41,285 --------------------
+2025-05-09 03:37:41,610 model saved on eval reward: 4725.5146484375
+2025-05-09 03:37:41,834 Evaluating model on reach-v2...
+2025-05-09 03:43:07,990 ppo Reach - Success: 0.0, Reward: 4721.69873046875
+2025-05-09 03:43:09,279 Training model...
+2025-05-09 03:44:21,711 evaluating self.num_timesteps=1024, mean_reward=4.741940498352051=======
+2025-05-09 03:44:21,711 evaluating self.num_timesteps=1024, success=0.0=======
+2025-05-09 03:44:21,726 model saved on eval reward: 4.741940498352051
+2025-05-09 03:44:21,726 --------------------
+2025-05-09 03:45:31,792 evaluating self.num_timesteps=2048, mean_reward=4.603733539581299=======
+2025-05-09 03:45:31,792 evaluating self.num_timesteps=2048, success=0.0=======
+2025-05-09 03:45:31,792 --------------------
+2025-05-09 03:46:43,367 evaluating self.num_timesteps=3072, mean_reward=4.55807638168335=======
+2025-05-09 03:46:43,367 evaluating self.num_timesteps=3072, success=0.0=======
+2025-05-09 03:46:43,367 --------------------
+2025-05-09 03:47:52,978 evaluating self.num_timesteps=4096, mean_reward=4.56178092956543=======
+2025-05-09 03:47:52,978 evaluating self.num_timesteps=4096, success=0.0=======
+2025-05-09 03:47:52,978 --------------------
+2025-05-09 03:49:06,754 evaluating self.num_timesteps=5120, mean_reward=4.34765625=======
+2025-05-09 03:49:06,754 evaluating self.num_timesteps=5120, success=0.0=======
+2025-05-09 03:49:06,754 --------------------
+2025-05-09 03:50:20,557 evaluating self.num_timesteps=6144, mean_reward=4.3614373207092285=======
+2025-05-09 03:50:20,557 evaluating self.num_timesteps=6144, success=0.0=======
+2025-05-09 03:50:20,557 --------------------
+2025-05-09 03:51:33,702 evaluating self.num_timesteps=7168, mean_reward=4.515834331512451=======
+2025-05-09 03:51:33,702 evaluating self.num_timesteps=7168, success=0.0=======
+2025-05-09 03:51:33,704 --------------------
+2025-05-09 03:52:48,171 evaluating self.num_timesteps=8192, mean_reward=4.827969074249268=======
+2025-05-09 03:52:48,171 evaluating self.num_timesteps=8192, success=0.0=======
+2025-05-09 03:52:48,178 model saved on eval reward: 4.827969074249268
+2025-05-09 03:52:48,178 --------------------
+2025-05-09 03:54:03,016 evaluating self.num_timesteps=9216, mean_reward=4.447338581085205=======
+2025-05-09 03:54:03,016 evaluating self.num_timesteps=9216, success=0.0=======
+2025-05-09 03:54:03,018 --------------------
+2025-05-09 03:55:17,233 evaluating self.num_timesteps=10240, mean_reward=4.526193141937256=======
+2025-05-09 03:55:17,233 evaluating self.num_timesteps=10240, success=0.0=======
+2025-05-09 03:55:17,234 --------------------
+2025-05-09 03:56:31,523 evaluating self.num_timesteps=11264, mean_reward=4.328469276428223=======
+2025-05-09 03:56:31,524 evaluating self.num_timesteps=11264, success=0.0=======
+2025-05-09 03:56:31,526 --------------------
+2025-05-09 03:57:39,716 evaluating self.num_timesteps=12288, mean_reward=4.758747577667236=======
+2025-05-09 03:57:39,716 evaluating self.num_timesteps=12288, success=0.0=======
+2025-05-09 03:57:39,716 --------------------
+2025-05-09 03:58:53,560 evaluating self.num_timesteps=13312, mean_reward=4.652299880981445=======
+2025-05-09 03:58:53,560 evaluating self.num_timesteps=13312, success=0.0=======
+2025-05-09 03:58:53,561 --------------------
+2025-05-09 04:00:07,405 evaluating self.num_timesteps=14336, mean_reward=4.634703159332275=======
+2025-05-09 04:00:07,405 evaluating self.num_timesteps=14336, success=0.0=======
+2025-05-09 04:00:07,405 --------------------
+2025-05-09 04:01:18,903 evaluating self.num_timesteps=15360, mean_reward=4.727153301239014=======
+2025-05-09 04:01:18,903 evaluating self.num_timesteps=15360, success=0.0=======
+2025-05-09 04:01:18,903 --------------------
+2025-05-09 04:02:33,267 evaluating self.num_timesteps=16384, mean_reward=4.574275970458984=======
+2025-05-09 04:02:33,267 evaluating self.num_timesteps=16384, success=0.0=======
+2025-05-09 04:02:33,267 --------------------
+2025-05-09 04:03:47,309 evaluating self.num_timesteps=17408, mean_reward=4.558775424957275=======
+2025-05-09 04:03:47,309 evaluating self.num_timesteps=17408, success=0.0=======
+2025-05-09 04:03:47,309 --------------------
+2025-05-09 04:05:01,307 evaluating self.num_timesteps=18432, mean_reward=4.466905117034912=======
+2025-05-09 04:05:01,308 evaluating self.num_timesteps=18432, success=0.0=======
+2025-05-09 04:05:01,308 --------------------
+2025-05-09 04:06:15,492 evaluating self.num_timesteps=19456, mean_reward=4.411124229431152=======
+2025-05-09 04:06:15,492 evaluating self.num_timesteps=19456, success=0.0=======
+2025-05-09 04:06:15,492 --------------------
+2025-05-09 04:07:28,950 evaluating self.num_timesteps=20480, mean_reward=4.466133117675781=======
+2025-05-09 04:07:28,950 evaluating self.num_timesteps=20480, success=0.0=======
+2025-05-09 04:07:28,950 --------------------
+2025-05-09 04:08:42,670 evaluating self.num_timesteps=21504, mean_reward=4.533466339111328=======
+2025-05-09 04:08:42,670 evaluating self.num_timesteps=21504, success=0.0=======
+2025-05-09 04:08:42,671 --------------------
+2025-05-09 04:09:56,758 evaluating self.num_timesteps=22528, mean_reward=4.601109981536865=======
+2025-05-09 04:09:56,758 evaluating self.num_timesteps=22528, success=0.0=======
+2025-05-09 04:09:56,758 --------------------
+2025-05-09 04:11:10,438 evaluating self.num_timesteps=23552, mean_reward=4.44918155670166=======
+2025-05-09 04:11:10,438 evaluating self.num_timesteps=23552, success=0.0=======
+2025-05-09 04:11:10,438 --------------------
+2025-05-09 04:12:23,991 evaluating self.num_timesteps=24576, mean_reward=4.652831077575684=======
+2025-05-09 04:12:23,991 evaluating self.num_timesteps=24576, success=0.0=======
+2025-05-09 04:12:23,991 --------------------
+2025-05-09 04:13:36,889 evaluating self.num_timesteps=25600, mean_reward=4.4769673347473145=======
+2025-05-09 04:13:36,889 evaluating self.num_timesteps=25600, success=0.0=======
+2025-05-09 04:13:36,890 --------------------
+2025-05-09 04:14:50,396 evaluating self.num_timesteps=26624, mean_reward=4.598924160003662=======
+2025-05-09 04:14:50,396 evaluating self.num_timesteps=26624, success=0.0=======
+2025-05-09 04:14:50,396 --------------------
+2025-05-09 04:16:03,381 evaluating self.num_timesteps=27648, mean_reward=4.597611904144287=======
+2025-05-09 04:16:03,381 evaluating self.num_timesteps=27648, success=0.0=======
+2025-05-09 04:16:03,381 --------------------
+2025-05-09 04:17:17,092 evaluating self.num_timesteps=28672, mean_reward=4.567870140075684=======
+2025-05-09 04:17:17,092 evaluating self.num_timesteps=28672, success=0.0=======
+2025-05-09 04:17:17,092 --------------------
+2025-05-09 04:18:29,691 evaluating self.num_timesteps=29696, mean_reward=4.673016548156738=======
+2025-05-09 04:18:29,691 evaluating self.num_timesteps=29696, success=0.0=======
+2025-05-09 04:18:29,691 --------------------
+2025-05-09 04:19:37,876 evaluating self.num_timesteps=30720, mean_reward=4.508286476135254=======
+2025-05-09 04:19:37,876 evaluating self.num_timesteps=30720, success=0.0=======
+2025-05-09 04:19:37,876 --------------------
+2025-05-09 04:20:51,828 evaluating self.num_timesteps=31744, mean_reward=4.483218193054199=======
+2025-05-09 04:20:51,828 evaluating self.num_timesteps=31744, success=0.0=======
+2025-05-09 04:20:51,828 --------------------
+2025-05-09 04:22:04,558 evaluating self.num_timesteps=32768, mean_reward=4.424396991729736=======
+2025-05-09 04:22:04,559 evaluating self.num_timesteps=32768, success=0.0=======
+2025-05-09 04:22:04,559 --------------------
+2025-05-09 04:23:18,616 evaluating self.num_timesteps=33792, mean_reward=4.6262383460998535=======
+2025-05-09 04:23:18,617 evaluating self.num_timesteps=33792, success=0.0=======
+2025-05-09 04:23:18,617 --------------------
+2025-05-09 04:24:32,615 evaluating self.num_timesteps=34816, mean_reward=4.265469551086426=======
+2025-05-09 04:24:32,616 evaluating self.num_timesteps=34816, success=0.0=======
+2025-05-09 04:24:32,621 --------------------
+2025-05-09 04:25:46,635 evaluating self.num_timesteps=35840, mean_reward=4.621979713439941=======
+2025-05-09 04:25:46,635 evaluating self.num_timesteps=35840, success=0.0=======
+2025-05-09 04:25:46,635 --------------------
+2025-05-09 04:26:58,657 evaluating self.num_timesteps=36864, mean_reward=4.541247844696045=======
+2025-05-09 04:26:58,657 evaluating self.num_timesteps=36864, success=0.0=======
+2025-05-09 04:26:58,658 --------------------
+2025-05-09 04:28:12,712 evaluating self.num_timesteps=37888, mean_reward=4.476201057434082=======
+2025-05-09 04:28:12,712 evaluating self.num_timesteps=37888, success=0.0=======
+2025-05-09 04:28:12,712 --------------------
+2025-05-09 04:29:26,240 evaluating self.num_timesteps=38912, mean_reward=4.4523820877075195=======
+2025-05-09 04:29:26,240 evaluating self.num_timesteps=38912, success=0.0=======
+2025-05-09 04:29:26,240 --------------------
+2025-05-09 04:30:40,326 evaluating self.num_timesteps=39936, mean_reward=4.4936017990112305=======
+2025-05-09 04:30:40,326 evaluating self.num_timesteps=39936, success=0.0=======
+2025-05-09 04:30:40,327 --------------------
+2025-05-09 04:31:54,273 evaluating self.num_timesteps=40960, mean_reward=4.491937637329102=======
+2025-05-09 04:31:54,273 evaluating self.num_timesteps=40960, success=0.0=======
+2025-05-09 04:31:54,273 --------------------
+2025-05-09 04:33:08,379 evaluating self.num_timesteps=41984, mean_reward=4.676591396331787=======
+2025-05-09 04:33:08,379 evaluating self.num_timesteps=41984, success=0.0=======
+2025-05-09 04:33:08,380 --------------------
+2025-05-09 04:34:22,492 evaluating self.num_timesteps=43008, mean_reward=4.709934711456299=======
+2025-05-09 04:34:22,492 evaluating self.num_timesteps=43008, success=0.0=======
+2025-05-09 04:34:22,492 --------------------
+2025-05-09 04:35:33,763 evaluating self.num_timesteps=44032, mean_reward=4.6377787590026855=======
+2025-05-09 04:35:33,763 evaluating self.num_timesteps=44032, success=0.0=======
+2025-05-09 04:35:33,764 --------------------
+2025-05-09 04:36:47,589 evaluating self.num_timesteps=45056, mean_reward=4.650915145874023=======
+2025-05-09 04:36:47,589 evaluating self.num_timesteps=45056, success=0.0=======
+2025-05-09 04:36:47,589 --------------------
+2025-05-09 04:38:01,283 evaluating self.num_timesteps=46080, mean_reward=4.629622459411621=======
+2025-05-09 04:38:01,284 evaluating self.num_timesteps=46080, success=0.0=======
+2025-05-09 04:38:01,284 --------------------
+2025-05-09 04:39:14,582 evaluating self.num_timesteps=47104, mean_reward=4.563596248626709=======
+2025-05-09 04:39:14,582 evaluating self.num_timesteps=47104, success=0.0=======
+2025-05-09 04:39:14,582 --------------------
+2025-05-09 04:40:28,414 evaluating self.num_timesteps=48128, mean_reward=4.8129072189331055=======
+2025-05-09 04:40:28,414 evaluating self.num_timesteps=48128, success=0.0=======
+2025-05-09 04:40:28,414 --------------------
+2025-05-09 04:41:41,775 evaluating self.num_timesteps=49152, mean_reward=4.698392868041992=======
+2025-05-09 04:41:41,775 evaluating self.num_timesteps=49152, success=0.0=======
+2025-05-09 04:41:41,776 --------------------
+2025-05-09 04:42:54,459 evaluating self.num_timesteps=50176, mean_reward=4.5214524269104=======
+2025-05-09 04:42:54,459 evaluating self.num_timesteps=50176, success=0.0=======
+2025-05-09 04:42:54,462 --------------------
+2025-05-09 04:44:08,908 evaluating self.num_timesteps=51200, mean_reward=4.62515926361084=======
+2025-05-09 04:44:08,908 evaluating self.num_timesteps=51200, success=0.0=======
+2025-05-09 04:44:08,909 --------------------
+2025-05-09 04:45:23,344 evaluating self.num_timesteps=52224, mean_reward=4.280927658081055=======
+2025-05-09 04:45:23,344 evaluating self.num_timesteps=52224, success=0.0=======
+2025-05-09 04:45:23,344 --------------------
+2025-05-09 04:46:33,294 evaluating self.num_timesteps=53248, mean_reward=4.590479850769043=======
+2025-05-09 04:46:33,294 evaluating self.num_timesteps=53248, success=0.0=======
+2025-05-09 04:46:33,294 --------------------
+2025-05-09 04:47:41,768 evaluating self.num_timesteps=54272, mean_reward=4.769948959350586=======
+2025-05-09 04:47:41,768 evaluating self.num_timesteps=54272, success=0.0=======
+2025-05-09 04:47:41,768 --------------------
+2025-05-09 04:48:51,845 evaluating self.num_timesteps=55296, mean_reward=4.452385425567627=======
+2025-05-09 04:48:51,845 evaluating self.num_timesteps=55296, success=0.0=======
+2025-05-09 04:48:51,845 --------------------
+2025-05-09 04:50:05,312 evaluating self.num_timesteps=56320, mean_reward=4.27714729309082=======
+2025-05-09 04:50:05,312 evaluating self.num_timesteps=56320, success=0.0=======
+2025-05-09 04:50:05,313 --------------------
+2025-05-09 04:51:12,899 evaluating self.num_timesteps=57344, mean_reward=4.4331583976745605=======
+2025-05-09 04:51:12,900 evaluating self.num_timesteps=57344, success=0.0=======
+2025-05-09 04:51:12,900 --------------------
+2025-05-09 04:52:28,452 evaluating self.num_timesteps=58368, mean_reward=4.314682960510254=======
+2025-05-09 04:52:28,452 evaluating self.num_timesteps=58368, success=0.0=======
+2025-05-09 04:52:28,452 --------------------
+2025-05-09 04:53:42,502 evaluating self.num_timesteps=59392, mean_reward=4.139233589172363=======
+2025-05-09 04:53:42,502 evaluating self.num_timesteps=59392, success=0.0=======
+2025-05-09 04:53:42,502 --------------------
+2025-05-09 04:54:55,749 evaluating self.num_timesteps=60416, mean_reward=4.5239434242248535=======
+2025-05-09 04:54:55,749 evaluating self.num_timesteps=60416, success=0.0=======
+2025-05-09 04:54:55,749 --------------------
+2025-05-09 04:56:09,886 evaluating self.num_timesteps=61440, mean_reward=4.309964179992676=======
+2025-05-09 04:56:09,886 evaluating self.num_timesteps=61440, success=0.0=======
+2025-05-09 04:56:09,886 --------------------
+2025-05-09 04:57:24,058 evaluating self.num_timesteps=62464, mean_reward=4.496246337890625=======
+2025-05-09 04:57:24,058 evaluating self.num_timesteps=62464, success=0.0=======
+2025-05-09 04:57:24,059 --------------------
+2025-05-09 04:58:38,186 evaluating self.num_timesteps=63488, mean_reward=3.999277114868164=======
+2025-05-09 04:58:38,186 evaluating self.num_timesteps=63488, success=0.0=======
+2025-05-09 04:58:38,186 --------------------
+2025-05-09 04:59:52,235 evaluating self.num_timesteps=64512, mean_reward=4.386005878448486=======
+2025-05-09 04:59:52,235 evaluating self.num_timesteps=64512, success=0.0=======
+2025-05-09 04:59:52,235 --------------------
+2025-05-09 05:01:05,967 evaluating self.num_timesteps=65536, mean_reward=4.24149227142334=======
+2025-05-09 05:01:05,967 evaluating self.num_timesteps=65536, success=0.0=======
+2025-05-09 05:01:05,967 --------------------
+2025-05-09 05:02:18,815 evaluating self.num_timesteps=66560, mean_reward=4.29335880279541=======
+2025-05-09 05:02:18,815 evaluating self.num_timesteps=66560, success=0.0=======
+2025-05-09 05:02:18,815 --------------------
+2025-05-09 05:03:32,714 evaluating self.num_timesteps=67584, mean_reward=4.124266147613525=======
+2025-05-09 05:03:32,714 evaluating self.num_timesteps=67584, success=0.0=======
+2025-05-09 05:03:32,716 --------------------
+2025-05-09 05:04:47,801 evaluating self.num_timesteps=68608, mean_reward=4.206737995147705=======
+2025-05-09 05:04:47,802 evaluating self.num_timesteps=68608, success=0.0=======
+2025-05-09 05:04:47,802 --------------------
+2025-05-09 05:06:02,096 evaluating self.num_timesteps=69632, mean_reward=4.148980617523193=======
+2025-05-09 05:06:02,096 evaluating self.num_timesteps=69632, success=0.0=======
+2025-05-09 05:06:02,096 --------------------
+2025-05-09 05:07:16,682 evaluating self.num_timesteps=70656, mean_reward=3.9236629009246826=======
+2025-05-09 05:07:16,682 evaluating self.num_timesteps=70656, success=0.0=======
+2025-05-09 05:07:16,682 --------------------
+2025-05-09 05:08:31,255 evaluating self.num_timesteps=71680, mean_reward=3.820660352706909=======
+2025-05-09 05:08:31,255 evaluating self.num_timesteps=71680, success=0.0=======
+2025-05-09 05:08:31,256 --------------------
+2025-05-09 05:09:45,487 evaluating self.num_timesteps=72704, mean_reward=4.437775611877441=======
+2025-05-09 05:09:45,487 evaluating self.num_timesteps=72704, success=0.0=======
+2025-05-09 05:09:45,488 --------------------
+2025-05-09 05:10:59,801 evaluating self.num_timesteps=73728, mean_reward=3.976519823074341=======
+2025-05-09 05:10:59,802 evaluating self.num_timesteps=73728, success=0.0=======
+2025-05-09 05:10:59,802 --------------------
+2025-05-09 05:12:14,296 evaluating self.num_timesteps=74752, mean_reward=4.600549221038818=======
+2025-05-09 05:12:14,296 evaluating self.num_timesteps=74752, success=0.0=======
+2025-05-09 05:12:14,296 --------------------
+2025-05-09 05:13:28,850 evaluating self.num_timesteps=75776, mean_reward=4.150794506072998=======
+2025-05-09 05:13:28,850 evaluating self.num_timesteps=75776, success=0.0=======
+2025-05-09 05:13:28,850 --------------------
+2025-05-09 05:14:43,841 evaluating self.num_timesteps=76800, mean_reward=4.305941581726074=======
+2025-05-09 05:14:43,841 evaluating self.num_timesteps=76800, success=0.0=======
+2025-05-09 05:14:43,841 --------------------
+2025-05-09 05:15:58,653 evaluating self.num_timesteps=77824, mean_reward=4.422337055206299=======
+2025-05-09 05:15:58,654 evaluating self.num_timesteps=77824, success=0.0=======
+2025-05-09 05:15:58,654 --------------------
+2025-05-09 05:17:13,965 evaluating self.num_timesteps=78848, mean_reward=4.062637805938721=======
+2025-05-09 05:17:13,965 evaluating self.num_timesteps=78848, success=0.0=======
+2025-05-09 05:17:13,965 --------------------
+2025-05-09 05:18:26,888 evaluating self.num_timesteps=79872, mean_reward=4.0962724685668945=======
+2025-05-09 05:18:26,888 evaluating self.num_timesteps=79872, success=0.0=======
+2025-05-09 05:18:26,889 --------------------
+2025-05-09 05:19:40,769 evaluating self.num_timesteps=80896, mean_reward=4.205347537994385=======
+2025-05-09 05:19:40,769 evaluating self.num_timesteps=80896, success=0.0=======
+2025-05-09 05:19:40,770 --------------------
+2025-05-09 05:20:55,124 evaluating self.num_timesteps=81920, mean_reward=4.225930690765381=======
+2025-05-09 05:20:55,124 evaluating self.num_timesteps=81920, success=0.0=======
+2025-05-09 05:20:55,124 --------------------
+2025-05-09 05:22:09,027 evaluating self.num_timesteps=82944, mean_reward=4.209136009216309=======
+2025-05-09 05:22:09,027 evaluating self.num_timesteps=82944, success=0.0=======
+2025-05-09 05:22:09,027 --------------------
+2025-05-09 05:23:17,988 evaluating self.num_timesteps=83968, mean_reward=3.830256938934326=======
+2025-05-09 05:23:17,988 evaluating self.num_timesteps=83968, success=0.0=======
+2025-05-09 05:23:17,988 --------------------
+2025-05-09 05:24:31,957 evaluating self.num_timesteps=84992, mean_reward=3.86163592338562=======
+2025-05-09 05:24:31,957 evaluating self.num_timesteps=84992, success=0.0=======
+2025-05-09 05:24:31,957 --------------------
+2025-05-09 05:25:46,219 evaluating self.num_timesteps=86016, mean_reward=4.215760707855225=======
+2025-05-09 05:25:46,219 evaluating self.num_timesteps=86016, success=0.0=======
+2025-05-09 05:25:46,220 --------------------
+2025-05-09 05:27:00,413 evaluating self.num_timesteps=87040, mean_reward=4.432859420776367=======
+2025-05-09 05:27:00,413 evaluating self.num_timesteps=87040, success=0.0=======
+2025-05-09 05:27:00,414 --------------------
+2025-05-09 05:28:13,498 evaluating self.num_timesteps=88064, mean_reward=3.9083449840545654=======
+2025-05-09 05:28:13,498 evaluating self.num_timesteps=88064, success=0.0=======
+2025-05-09 05:28:13,498 --------------------
+2025-05-09 05:29:28,644 evaluating self.num_timesteps=89088, mean_reward=4.118406295776367=======
+2025-05-09 05:29:28,644 evaluating self.num_timesteps=89088, success=0.0=======
+2025-05-09 05:29:28,644 --------------------
+2025-05-09 05:30:43,847 evaluating self.num_timesteps=90112, mean_reward=3.863239288330078=======
+2025-05-09 05:30:43,847 evaluating self.num_timesteps=90112, success=0.0=======
+2025-05-09 05:30:43,847 --------------------
+2025-05-09 05:31:58,573 evaluating self.num_timesteps=91136, mean_reward=3.6954779624938965=======
+2025-05-09 05:31:58,573 evaluating self.num_timesteps=91136, success=0.0=======
+2025-05-09 05:31:58,573 --------------------
+2025-05-09 05:33:12,231 evaluating self.num_timesteps=92160, mean_reward=4.242284297943115=======
+2025-05-09 05:33:12,231 evaluating self.num_timesteps=92160, success=0.0=======
+2025-05-09 05:33:12,232 --------------------
+2025-05-09 05:34:26,721 evaluating self.num_timesteps=93184, mean_reward=4.246831893920898=======
+2025-05-09 05:34:26,721 evaluating self.num_timesteps=93184, success=0.0=======
+2025-05-09 05:34:26,721 --------------------
+2025-05-09 05:35:41,554 evaluating self.num_timesteps=94208, mean_reward=4.0619425773620605=======
+2025-05-09 05:35:41,554 evaluating self.num_timesteps=94208, success=0.0=======
+2025-05-09 05:35:41,554 --------------------
+2025-05-09 05:36:52,483 evaluating self.num_timesteps=95232, mean_reward=3.6987144947052=======
+2025-05-09 05:36:52,483 evaluating self.num_timesteps=95232, success=0.0=======
+2025-05-09 05:36:52,484 --------------------
+2025-05-09 05:38:06,424 evaluating self.num_timesteps=96256, mean_reward=4.167481422424316=======
+2025-05-09 05:38:06,425 evaluating self.num_timesteps=96256, success=0.0=======
+2025-05-09 05:38:06,425 --------------------
+2025-05-09 05:39:19,543 evaluating self.num_timesteps=97280, mean_reward=3.931121349334717=======
+2025-05-09 05:39:19,543 evaluating self.num_timesteps=97280, success=0.0=======
+2025-05-09 05:39:19,543 --------------------
+2025-05-09 05:40:33,080 evaluating self.num_timesteps=98304, mean_reward=3.570436477661133=======
+2025-05-09 05:40:33,080 evaluating self.num_timesteps=98304, success=0.0=======
+2025-05-09 05:40:33,080 --------------------
+2025-05-09 05:41:46,855 evaluating self.num_timesteps=99328, mean_reward=4.2144951820373535=======
+2025-05-09 05:41:46,855 evaluating self.num_timesteps=99328, success=0.0=======
+2025-05-09 05:41:46,856 --------------------
+2025-05-09 05:43:00,581 evaluating self.num_timesteps=100352, mean_reward=3.605747699737549=======
+2025-05-09 05:43:00,581 evaluating self.num_timesteps=100352, success=0.0=======
+2025-05-09 05:43:00,582 --------------------
+2025-05-09 05:44:10,897 evaluating self.num_timesteps=101376, mean_reward=4.237559795379639=======
+2025-05-09 05:44:10,897 evaluating self.num_timesteps=101376, success=0.0=======
+2025-05-09 05:44:10,898 --------------------
+2025-05-09 05:45:22,379 evaluating self.num_timesteps=102400, mean_reward=4.229159832000732=======
+2025-05-09 05:45:22,379 evaluating self.num_timesteps=102400, success=0.0=======
+2025-05-09 05:45:22,379 --------------------
+2025-05-09 05:45:22,704 model saved on eval reward: 4.827969074249268
+2025-05-09 05:45:22,869 Evaluating model on pick-place-v2...
+2025-05-09 05:51:13,727 ppo Pick Place - Success: 0.0, Reward: 4.2102885246276855
+2025-05-09 05:51:13,729 Evaluating on previous task: Reach (After Pick Place)
+2025-05-09 05:56:43,579 ppo Reach (After Pick Place) - Success: 0.0, Reward: 4763.14892578125
+2025-05-09 05:56:45,397 Training model...
+2025-05-09 05:58:00,801 evaluating self.num_timesteps=1024, mean_reward=292.35418701171875=======
+2025-05-09 05:58:00,801 evaluating self.num_timesteps=1024, success=0.0=======
+2025-05-09 05:58:00,812 model saved on eval reward: 292.35418701171875
+2025-05-09 05:58:00,812 --------------------
+2025-05-09 05:59:16,251 evaluating self.num_timesteps=2048, mean_reward=160.5979461669922=======
+2025-05-09 05:59:16,251 evaluating self.num_timesteps=2048, success=0.0=======
+2025-05-09 05:59:16,252 --------------------
+2025-05-09 06:00:28,698 evaluating self.num_timesteps=3072, mean_reward=305.56365966796875=======
+2025-05-09 06:00:28,698 evaluating self.num_timesteps=3072, success=0.0=======
+2025-05-09 06:00:28,710 model saved on eval reward: 305.56365966796875
+2025-05-09 06:00:28,710 --------------------
+2025-05-09 06:01:42,861 evaluating self.num_timesteps=4096, mean_reward=274.3786315917969=======
+2025-05-09 06:01:42,861 evaluating self.num_timesteps=4096, success=0.0=======
+2025-05-09 06:01:42,861 --------------------
+2025-05-09 06:02:57,911 evaluating self.num_timesteps=5120, mean_reward=386.5223693847656=======
+2025-05-09 06:02:57,911 evaluating self.num_timesteps=5120, success=0.0=======
+2025-05-09 06:02:57,919 model saved on eval reward: 386.5223693847656
+2025-05-09 06:02:57,919 --------------------
+2025-05-09 06:04:08,835 evaluating self.num_timesteps=6144, mean_reward=320.34918212890625=======
+2025-05-09 06:04:08,836 evaluating self.num_timesteps=6144, success=0.0=======
+2025-05-09 06:04:08,836 --------------------
+2025-05-09 06:05:20,345 evaluating self.num_timesteps=7168, mean_reward=232.12216186523438=======
+2025-05-09 06:05:20,345 evaluating self.num_timesteps=7168, success=0.0=======
+2025-05-09 06:05:20,345 --------------------
+2025-05-09 06:06:35,888 evaluating self.num_timesteps=8192, mean_reward=232.6625518798828=======
+2025-05-09 06:06:35,888 evaluating self.num_timesteps=8192, success=0.0=======
+2025-05-09 06:06:35,888 --------------------
+2025-05-09 06:07:51,179 evaluating self.num_timesteps=9216, mean_reward=185.85986328125=======
+2025-05-09 06:07:51,179 evaluating self.num_timesteps=9216, success=0.0=======
+2025-05-09 06:07:51,179 --------------------
+2025-05-09 06:09:06,598 evaluating self.num_timesteps=10240, mean_reward=402.2951354980469=======
+2025-05-09 06:09:06,598 evaluating self.num_timesteps=10240, success=0.0=======
+2025-05-09 06:09:06,605 model saved on eval reward: 402.2951354980469
+2025-05-09 06:09:06,605 --------------------
+2025-05-09 06:10:19,661 evaluating self.num_timesteps=11264, mean_reward=459.2190856933594=======
+2025-05-09 06:10:19,661 evaluating self.num_timesteps=11264, success=0.0=======
+2025-05-09 06:10:19,673 model saved on eval reward: 459.2190856933594
+2025-05-09 06:10:19,674 --------------------
+2025-05-09 06:11:34,975 evaluating self.num_timesteps=12288, mean_reward=356.71661376953125=======
+2025-05-09 06:11:34,975 evaluating self.num_timesteps=12288, success=0.0=======
+2025-05-09 06:11:34,975 --------------------
+2025-05-09 06:12:49,752 evaluating self.num_timesteps=13312, mean_reward=425.318603515625=======
+2025-05-09 06:12:49,752 evaluating self.num_timesteps=13312, success=0.0=======
+2025-05-09 06:12:49,752 --------------------
+2025-05-09 06:14:04,954 evaluating self.num_timesteps=14336, mean_reward=434.27447509765625=======
+2025-05-09 06:14:04,954 evaluating self.num_timesteps=14336, success=0.0=======
+2025-05-09 06:14:04,957 --------------------
+2025-05-09 06:15:19,699 evaluating self.num_timesteps=15360, mean_reward=461.6385192871094=======
+2025-05-09 06:15:19,699 evaluating self.num_timesteps=15360, success=0.0=======
+2025-05-09 06:15:19,709 model saved on eval reward: 461.6385192871094
+2025-05-09 06:15:19,709 --------------------
+2025-05-09 06:16:30,486 evaluating self.num_timesteps=16384, mean_reward=436.4527893066406=======
+2025-05-09 06:16:30,487 evaluating self.num_timesteps=16384, success=0.0=======
+2025-05-09 06:16:30,487 --------------------
+2025-05-09 06:17:45,225 evaluating self.num_timesteps=17408, mean_reward=464.59222412109375=======
+2025-05-09 06:17:45,226 evaluating self.num_timesteps=17408, success=0.0=======
+2025-05-09 06:17:45,233 model saved on eval reward: 464.59222412109375
+2025-05-09 06:17:45,233 --------------------
+2025-05-09 06:18:59,903 evaluating self.num_timesteps=18432, mean_reward=482.2396545410156=======
+2025-05-09 06:18:59,903 evaluating self.num_timesteps=18432, success=0.0=======
+2025-05-09 06:18:59,913 model saved on eval reward: 482.2396545410156
+2025-05-09 06:18:59,913 --------------------
+2025-05-09 06:20:14,600 evaluating self.num_timesteps=19456, mean_reward=461.21197509765625=======
+2025-05-09 06:20:14,600 evaluating self.num_timesteps=19456, success=0.0=======
+2025-05-09 06:20:14,600 --------------------
+2025-05-09 06:21:29,976 evaluating self.num_timesteps=20480, mean_reward=470.5439453125=======
+2025-05-09 06:21:29,976 evaluating self.num_timesteps=20480, success=0.0=======
+2025-05-09 06:21:29,977 --------------------
+2025-05-09 06:22:41,502 evaluating self.num_timesteps=21504, mean_reward=469.49200439453125=======
+2025-05-09 06:22:41,502 evaluating self.num_timesteps=21504, success=0.0=======
+2025-05-09 06:22:41,502 --------------------
+2025-05-09 06:23:53,523 evaluating self.num_timesteps=22528, mean_reward=486.02520751953125=======
+2025-05-09 06:23:53,524 evaluating self.num_timesteps=22528, success=0.0=======
+2025-05-09 06:23:53,534 model saved on eval reward: 486.02520751953125
+2025-05-09 06:23:53,534 --------------------
+2025-05-09 06:25:08,444 evaluating self.num_timesteps=23552, mean_reward=463.1807556152344=======
+2025-05-09 06:25:08,444 evaluating self.num_timesteps=23552, success=0.0=======
+2025-05-09 06:25:08,445 --------------------
+2025-05-09 06:26:22,685 evaluating self.num_timesteps=24576, mean_reward=471.30645751953125=======
+2025-05-09 06:26:22,685 evaluating self.num_timesteps=24576, success=0.0=======
+2025-05-09 06:26:22,685 --------------------
+2025-05-09 06:27:37,471 evaluating self.num_timesteps=25600, mean_reward=472.65484619140625=======
+2025-05-09 06:27:37,471 evaluating self.num_timesteps=25600, success=0.0=======
+2025-05-09 06:27:37,472 --------------------
+2025-05-09 06:28:51,673 evaluating self.num_timesteps=26624, mean_reward=479.201171875=======
+2025-05-09 06:28:51,674 evaluating self.num_timesteps=26624, success=0.0=======
+2025-05-09 06:28:51,674 --------------------
+2025-05-09 06:30:05,909 evaluating self.num_timesteps=27648, mean_reward=466.43389892578125=======
+2025-05-09 06:30:05,910 evaluating self.num_timesteps=27648, success=0.0=======
+2025-05-09 06:30:05,910 --------------------
+2025-05-09 06:31:20,810 evaluating self.num_timesteps=28672, mean_reward=462.73394775390625=======
+2025-05-09 06:31:20,810 evaluating self.num_timesteps=28672, success=0.0=======
+2025-05-09 06:31:20,810 --------------------
+2025-05-09 06:32:35,919 evaluating self.num_timesteps=29696, mean_reward=457.623291015625=======
+2025-05-09 06:32:35,919 evaluating self.num_timesteps=29696, success=0.0=======
+2025-05-09 06:32:35,919 --------------------
+2025-05-09 06:33:47,820 evaluating self.num_timesteps=30720, mean_reward=419.86737060546875=======
+2025-05-09 06:33:47,820 evaluating self.num_timesteps=30720, success=0.0=======
+2025-05-09 06:33:47,820 --------------------
+2025-05-09 06:35:02,318 evaluating self.num_timesteps=31744, mean_reward=417.9588928222656=======
+2025-05-09 06:35:02,318 evaluating self.num_timesteps=31744, success=0.0=======
+2025-05-09 06:35:02,318 --------------------
+2025-05-09 06:36:16,105 evaluating self.num_timesteps=32768, mean_reward=420.6944274902344=======
+2025-05-09 06:36:16,105 evaluating self.num_timesteps=32768, success=0.0=======
+2025-05-09 06:36:16,107 --------------------
+2025-05-09 06:37:30,443 evaluating self.num_timesteps=33792, mean_reward=378.694091796875=======
+2025-05-09 06:37:30,443 evaluating self.num_timesteps=33792, success=0.0=======
+2025-05-09 06:37:30,443 --------------------
+2025-05-09 06:38:45,242 evaluating self.num_timesteps=34816, mean_reward=407.667724609375=======
+2025-05-09 06:38:45,242 evaluating self.num_timesteps=34816, success=0.0=======
+2025-05-09 06:38:45,243 --------------------
+2025-05-09 06:39:59,753 evaluating self.num_timesteps=35840, mean_reward=391.85430908203125=======
+2025-05-09 06:39:59,753 evaluating self.num_timesteps=35840, success=0.0=======
+2025-05-09 06:39:59,753 --------------------
+2025-05-09 06:41:13,887 evaluating self.num_timesteps=36864, mean_reward=372.57989501953125=======
+2025-05-09 06:41:13,887 evaluating self.num_timesteps=36864, success=0.0=======
+2025-05-09 06:41:13,890 --------------------
+2025-05-09 06:42:25,125 evaluating self.num_timesteps=37888, mean_reward=379.5093994140625=======
+2025-05-09 06:42:25,125 evaluating self.num_timesteps=37888, success=0.0=======
+2025-05-09 06:42:25,126 --------------------
+2025-05-09 06:43:39,646 evaluating self.num_timesteps=38912, mean_reward=399.821533203125=======
+2025-05-09 06:43:39,646 evaluating self.num_timesteps=38912, success=0.0=======
+2025-05-09 06:43:39,646 --------------------
+2025-05-09 06:44:53,617 evaluating self.num_timesteps=39936, mean_reward=444.2047424316406=======
+2025-05-09 06:44:53,617 evaluating self.num_timesteps=39936, success=0.0=======
+2025-05-09 06:44:53,617 --------------------
+2025-05-09 06:46:04,576 evaluating self.num_timesteps=40960, mean_reward=328.26580810546875=======
+2025-05-09 06:46:04,576 evaluating self.num_timesteps=40960, success=0.0=======
+2025-05-09 06:46:04,576 --------------------
+2025-05-09 06:47:16,127 evaluating self.num_timesteps=41984, mean_reward=300.2131652832031=======
+2025-05-09 06:47:16,128 evaluating self.num_timesteps=41984, success=0.0=======
+2025-05-09 06:47:16,128 --------------------
+2025-05-09 06:48:30,861 evaluating self.num_timesteps=43008, mean_reward=359.55242919921875=======
+2025-05-09 06:48:30,861 evaluating self.num_timesteps=43008, success=0.0=======
+2025-05-09 06:48:30,861 --------------------
+2025-05-09 06:49:45,312 evaluating self.num_timesteps=44032, mean_reward=502.085693359375=======
+2025-05-09 06:49:45,312 evaluating self.num_timesteps=44032, success=0.0=======
+2025-05-09 06:49:45,319 model saved on eval reward: 502.085693359375
+2025-05-09 06:49:45,319 --------------------
+2025-05-09 06:51:00,089 evaluating self.num_timesteps=45056, mean_reward=371.21368408203125=======
+2025-05-09 06:51:00,089 evaluating self.num_timesteps=45056, success=0.0=======
+2025-05-09 06:51:00,089 --------------------
+2025-05-09 06:52:14,600 evaluating self.num_timesteps=46080, mean_reward=289.71990966796875=======
+2025-05-09 06:52:14,600 evaluating self.num_timesteps=46080, success=0.0=======
+2025-05-09 06:52:14,601 --------------------
+2025-05-09 06:53:29,633 evaluating self.num_timesteps=47104, mean_reward=428.0428771972656=======
+2025-05-09 06:53:29,633 evaluating self.num_timesteps=47104, success=0.0=======
+2025-05-09 06:53:29,633 --------------------
+2025-05-09 06:54:43,763 evaluating self.num_timesteps=48128, mean_reward=383.8663635253906=======
+2025-05-09 06:54:43,764 evaluating self.num_timesteps=48128, success=0.0=======
+2025-05-09 06:54:43,764 --------------------
+2025-05-09 06:55:55,942 evaluating self.num_timesteps=49152, mean_reward=432.6368103027344=======
+2025-05-09 06:55:55,942 evaluating self.num_timesteps=49152, success=0.0=======
+2025-05-09 06:55:55,943 --------------------
+2025-05-09 06:57:10,037 evaluating self.num_timesteps=50176, mean_reward=444.34130859375=======
+2025-05-09 06:57:10,037 evaluating self.num_timesteps=50176, success=0.0=======
+2025-05-09 06:57:10,037 --------------------
+2025-05-09 06:58:24,314 evaluating self.num_timesteps=51200, mean_reward=396.06781005859375=======
+2025-05-09 06:58:24,314 evaluating self.num_timesteps=51200, success=0.0=======
+2025-05-09 06:58:24,314 --------------------
+2025-05-09 06:59:38,580 evaluating self.num_timesteps=52224, mean_reward=402.939453125=======
+2025-05-09 06:59:38,582 evaluating self.num_timesteps=52224, success=0.0=======
+2025-05-09 06:59:38,583 --------------------
+2025-05-09 07:00:52,566 evaluating self.num_timesteps=53248, mean_reward=428.63592529296875=======
+2025-05-09 07:00:52,567 evaluating self.num_timesteps=53248, success=0.0=======
+2025-05-09 07:00:52,567 --------------------
+2025-05-09 07:02:07,317 evaluating self.num_timesteps=54272, mean_reward=384.55072021484375=======
+2025-05-09 07:02:07,317 evaluating self.num_timesteps=54272, success=0.0=======
+2025-05-09 07:02:07,317 --------------------
+2025-05-09 07:03:22,484 evaluating self.num_timesteps=55296, mean_reward=371.9860534667969=======
+2025-05-09 07:03:22,484 evaluating self.num_timesteps=55296, success=0.0=======
+2025-05-09 07:03:22,484 --------------------
+2025-05-09 07:04:36,810 evaluating self.num_timesteps=56320, mean_reward=367.4327392578125=======
+2025-05-09 07:04:36,810 evaluating self.num_timesteps=56320, success=0.0=======
+2025-05-09 07:04:36,810 --------------------
+2025-05-09 07:05:43,859 evaluating self.num_timesteps=57344, mean_reward=361.64703369140625=======
+2025-05-09 07:05:43,859 evaluating self.num_timesteps=57344, success=0.0=======
+2025-05-09 07:05:43,859 --------------------
+2025-05-09 07:06:55,091 evaluating self.num_timesteps=58368, mean_reward=396.25262451171875=======
+2025-05-09 07:06:55,091 evaluating self.num_timesteps=58368, success=0.0=======
+2025-05-09 07:06:55,091 --------------------
+2025-05-09 07:08:09,239 evaluating self.num_timesteps=59392, mean_reward=379.537353515625=======
+2025-05-09 07:08:09,239 evaluating self.num_timesteps=59392, success=0.0=======
+2025-05-09 07:08:09,239 --------------------
+2025-05-09 07:09:24,128 evaluating self.num_timesteps=60416, mean_reward=426.7861328125=======
+2025-05-09 07:09:24,128 evaluating self.num_timesteps=60416, success=0.0=======
+2025-05-09 07:09:24,128 --------------------
+2025-05-09 07:10:37,949 evaluating self.num_timesteps=61440, mean_reward=471.74847412109375=======
+2025-05-09 07:10:37,949 evaluating self.num_timesteps=61440, success=0.0=======
+2025-05-09 07:10:37,951 --------------------
+2025-05-09 07:11:52,434 evaluating self.num_timesteps=62464, mean_reward=402.49456787109375=======
+2025-05-09 07:11:52,434 evaluating self.num_timesteps=62464, success=0.0=======
+2025-05-09 07:11:52,434 --------------------
+2025-05-09 07:13:06,746 evaluating self.num_timesteps=63488, mean_reward=480.744140625=======
+2025-05-09 07:13:06,746 evaluating self.num_timesteps=63488, success=0.0=======
+2025-05-09 07:13:06,747 --------------------
+2025-05-09 07:14:21,575 evaluating self.num_timesteps=64512, mean_reward=458.316650390625=======
+2025-05-09 07:14:21,575 evaluating self.num_timesteps=64512, success=0.0=======
+2025-05-09 07:14:21,575 --------------------
+2025-05-09 07:15:35,240 evaluating self.num_timesteps=65536, mean_reward=479.2674865722656=======
+2025-05-09 07:15:35,241 evaluating self.num_timesteps=65536, success=0.0=======
+2025-05-09 07:15:35,241 --------------------
+2025-05-09 07:16:49,500 evaluating self.num_timesteps=66560, mean_reward=455.8175354003906=======
+2025-05-09 07:16:49,500 evaluating self.num_timesteps=66560, success=0.0=======
+2025-05-09 07:16:49,500 --------------------
+2025-05-09 07:18:02,596 evaluating self.num_timesteps=67584, mean_reward=471.3460998535156=======
+2025-05-09 07:18:02,596 evaluating self.num_timesteps=67584, success=0.0=======
+2025-05-09 07:18:02,599 --------------------
+2025-05-09 07:19:17,419 evaluating self.num_timesteps=68608, mean_reward=454.66900634765625=======
+2025-05-09 07:19:17,419 evaluating self.num_timesteps=68608, success=0.0=======
+2025-05-09 07:19:17,419 --------------------
+2025-05-09 07:20:32,109 evaluating self.num_timesteps=69632, mean_reward=480.00335693359375=======
+2025-05-09 07:20:32,110 evaluating self.num_timesteps=69632, success=0.0=======
+2025-05-09 07:20:32,110 --------------------
+2025-05-09 07:21:46,764 evaluating self.num_timesteps=70656, mean_reward=439.6458435058594=======
+2025-05-09 07:21:46,764 evaluating self.num_timesteps=70656, success=0.0=======
+2025-05-09 07:21:46,764 --------------------
+2025-05-09 07:23:00,652 evaluating self.num_timesteps=71680, mean_reward=468.25567626953125=======
+2025-05-09 07:23:00,652 evaluating self.num_timesteps=71680, success=0.0=======
+2025-05-09 07:23:00,655 --------------------
+2025-05-09 07:24:15,350 evaluating self.num_timesteps=72704, mean_reward=471.99908447265625=======
+2025-05-09 07:24:15,350 evaluating self.num_timesteps=72704, success=0.0=======
+2025-05-09 07:24:15,350 --------------------
+2025-05-09 07:25:28,427 evaluating self.num_timesteps=73728, mean_reward=470.89630126953125=======
+2025-05-09 07:25:28,428 evaluating self.num_timesteps=73728, success=0.0=======
+2025-05-09 07:25:28,428 --------------------
+2025-05-09 07:26:37,998 evaluating self.num_timesteps=74752, mean_reward=466.10968017578125=======
+2025-05-09 07:26:37,998 evaluating self.num_timesteps=74752, success=0.0=======
+2025-05-09 07:26:37,998 --------------------
+2025-05-09 07:27:48,154 evaluating self.num_timesteps=75776, mean_reward=479.34942626953125=======
+2025-05-09 07:27:48,154 evaluating self.num_timesteps=75776, success=0.0=======
+2025-05-09 07:27:48,154 --------------------
+2025-05-09 07:28:57,267 evaluating self.num_timesteps=76800, mean_reward=451.1136169433594=======
+2025-05-09 07:28:57,267 evaluating self.num_timesteps=76800, success=0.0=======
+2025-05-09 07:28:57,270 --------------------
+2025-05-09 07:30:11,011 evaluating self.num_timesteps=77824, mean_reward=480.1692810058594=======
+2025-05-09 07:30:11,011 evaluating self.num_timesteps=77824, success=0.0=======
+2025-05-09 07:30:11,012 --------------------
+2025-05-09 07:31:25,278 evaluating self.num_timesteps=78848, mean_reward=446.428466796875=======
+2025-05-09 07:31:25,278 evaluating self.num_timesteps=78848, success=0.0=======
+2025-05-09 07:31:25,278 --------------------
+2025-05-09 07:32:39,462 evaluating self.num_timesteps=79872, mean_reward=467.17913818359375=======
+2025-05-09 07:32:39,462 evaluating self.num_timesteps=79872, success=0.0=======
+2025-05-09 07:32:39,462 --------------------
+2025-05-09 07:33:53,299 evaluating self.num_timesteps=80896, mean_reward=458.5712890625=======
+2025-05-09 07:33:53,299 evaluating self.num_timesteps=80896, success=0.0=======
+2025-05-09 07:33:53,299 --------------------
+2025-05-09 07:35:07,079 evaluating self.num_timesteps=81920, mean_reward=433.52227783203125=======
+2025-05-09 07:35:07,079 evaluating self.num_timesteps=81920, success=0.0=======
+2025-05-09 07:35:07,079 --------------------
+2025-05-09 07:36:18,235 evaluating self.num_timesteps=82944, mean_reward=456.69171142578125=======
+2025-05-09 07:36:18,235 evaluating self.num_timesteps=82944, success=0.0=======
+2025-05-09 07:36:18,236 --------------------
+2025-05-09 07:37:29,320 evaluating self.num_timesteps=83968, mean_reward=472.9249572753906=======
+2025-05-09 07:37:29,321 evaluating self.num_timesteps=83968, success=0.0=======
+2025-05-09 07:37:29,321 --------------------
+2025-05-09 07:38:42,561 evaluating self.num_timesteps=84992, mean_reward=445.09869384765625=======
+2025-05-09 07:38:42,561 evaluating self.num_timesteps=84992, success=0.0=======
+2025-05-09 07:38:42,561 --------------------
+2025-05-09 07:39:56,811 evaluating self.num_timesteps=86016, mean_reward=464.61767578125=======
+2025-05-09 07:39:56,811 evaluating self.num_timesteps=86016, success=0.0=======
+2025-05-09 07:39:56,811 --------------------
+2025-05-09 07:41:11,849 evaluating self.num_timesteps=87040, mean_reward=475.3307189941406=======
+2025-05-09 07:41:11,849 evaluating self.num_timesteps=87040, success=0.0=======
+2025-05-09 07:41:11,849 --------------------
+2025-05-09 07:42:26,117 evaluating self.num_timesteps=88064, mean_reward=458.3980407714844=======
+2025-05-09 07:42:26,117 evaluating self.num_timesteps=88064, success=0.0=======
+2025-05-09 07:42:26,118 --------------------
+2025-05-09 07:43:40,659 evaluating self.num_timesteps=89088, mean_reward=473.7430725097656=======
+2025-05-09 07:43:40,659 evaluating self.num_timesteps=89088, success=0.0=======
+2025-05-09 07:43:40,660 --------------------
+2025-05-09 07:44:55,359 evaluating self.num_timesteps=90112, mean_reward=468.9115295410156=======
+2025-05-09 07:44:55,359 evaluating self.num_timesteps=90112, success=0.0=======
+2025-05-09 07:44:55,359 --------------------
+2025-05-09 07:46:09,523 evaluating self.num_timesteps=91136, mean_reward=475.7076110839844=======
+2025-05-09 07:46:09,523 evaluating self.num_timesteps=91136, success=0.0=======
+2025-05-09 07:46:09,524 --------------------
+2025-05-09 07:47:23,047 evaluating self.num_timesteps=92160, mean_reward=456.33123779296875=======
+2025-05-09 07:47:23,047 evaluating self.num_timesteps=92160, success=0.0=======
+2025-05-09 07:47:23,047 --------------------
+2025-05-09 07:48:28,791 evaluating self.num_timesteps=93184, mean_reward=456.74737548828125=======
+2025-05-09 07:48:28,791 evaluating self.num_timesteps=93184, success=0.0=======
+2025-05-09 07:48:28,791 --------------------
+2025-05-09 07:49:43,242 evaluating self.num_timesteps=94208, mean_reward=469.977294921875=======
+2025-05-09 07:49:43,242 evaluating self.num_timesteps=94208, success=0.0=======
+2025-05-09 07:49:43,242 --------------------
+2025-05-09 07:50:57,948 evaluating self.num_timesteps=95232, mean_reward=470.25811767578125=======
+2025-05-09 07:50:57,948 evaluating self.num_timesteps=95232, success=0.0=======
+2025-05-09 07:50:57,948 --------------------
+2025-05-09 07:52:12,520 evaluating self.num_timesteps=96256, mean_reward=479.2535095214844=======
+2025-05-09 07:52:12,521 evaluating self.num_timesteps=96256, success=0.0=======
+2025-05-09 07:52:12,521 --------------------
+2025-05-09 07:53:26,928 evaluating self.num_timesteps=97280, mean_reward=492.55413818359375=======
+2025-05-09 07:53:26,929 evaluating self.num_timesteps=97280, success=0.0=======
+2025-05-09 07:53:26,929 --------------------
+2025-05-09 07:54:41,240 evaluating self.num_timesteps=98304, mean_reward=462.7892150878906=======
+2025-05-09 07:54:41,240 evaluating self.num_timesteps=98304, success=0.0=======
+2025-05-09 07:54:41,241 --------------------
+2025-05-09 07:55:55,516 evaluating self.num_timesteps=99328, mean_reward=473.480712890625=======
+2025-05-09 07:55:55,516 evaluating self.num_timesteps=99328, success=0.0=======
+2025-05-09 07:55:55,516 --------------------
+2025-05-09 07:57:10,638 evaluating self.num_timesteps=100352, mean_reward=457.8003845214844=======
+2025-05-09 07:57:10,639 evaluating self.num_timesteps=100352, success=0.0=======
+2025-05-09 07:57:10,639 --------------------
+2025-05-09 07:58:20,100 evaluating self.num_timesteps=101376, mean_reward=476.26068115234375=======
+2025-05-09 07:58:20,100 evaluating self.num_timesteps=101376, success=0.0=======
+2025-05-09 07:58:20,101 --------------------
+2025-05-09 07:59:35,618 evaluating self.num_timesteps=102400, mean_reward=466.4151306152344=======
+2025-05-09 07:59:35,618 evaluating self.num_timesteps=102400, success=0.0=======
+2025-05-09 07:59:35,618 --------------------
+2025-05-09 07:59:35,882 model saved on eval reward: 502.085693359375
+2025-05-09 07:59:36,029 Evaluating model on hammer-v2...
+2025-05-09 08:05:28,984 ppo Hammer - Success: 0.0, Reward: 461.72198486328125
+2025-05-09 08:05:28,985 Evaluating on previous task: Reach (After Hammer)
+2025-05-09 08:10:41,304 ppo Reach (After Hammer) - Success: 0.0, Reward: 4858.017578125
+2025-05-09 08:10:41,308 Evaluating on previous task: Pick Place (After Hammer)
+2025-05-09 08:16:28,480 ppo Pick Place (After Hammer) - Success: 0.0, Reward: 4.043344020843506
+2025-05-09 08:16:28,480 
+Final evaluation file complete. All combinations have been run.
+2025-05-09 08:16:28,480 Results saved to plots/eval_results_2025-05-09_01-47-14.csv
