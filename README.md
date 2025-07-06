@@ -3,7 +3,7 @@
 
 Sterling Chargois & Carter Larsen's final project repository for Cornell University's **CS 4756: Robot Learning**.
 
-This project was made from scratch with the task of exploring some hypothesis with robot learning. The paper of our analysis can be found here (To Be Uploaded).
+This project was made from scratch with the task of exploring some hypothesis with robot learning. The paper of our analysis can be found [here](https://drive.google.com/file/d/12MTTcVa6_Ab2dlIAFc5pk4wEIVL405mg/view?usp=drive_link) ([Slides](https://docs.google.com/presentation/d/1sQmqXRWeaORDbHCq5-XMdyDYY714FdZrJQhXGEuz_pM/edit?usp=sharing)).
 
 This project uses environments and expert policies from the [Metaworld](https://github.com/Farama-Foundation/Metaworld) benchmark to evaluate and experiment with various robotic manipulation tasks.
 
